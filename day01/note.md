@@ -1,10 +1,10 @@
-#terminal commands
+# terminal commands
 1.mkdir a command used to create new folder
 2.touch to create a file 
 3.to remove a file or directory with out recycle option
 4.mv which helps to rename or move a file 
 5.cp copy a file
-#git commands
+# git commands
 1.git init to intialize an empty git repository 
 2.git clone to get copy of remote repository to work on local machine 
 3.git push to add or upload locally saved works to a remote repository
