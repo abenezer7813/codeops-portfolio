@@ -1,0 +1,3 @@
+ abeni , 1000
+ kebede , 546
+ chala , 343
