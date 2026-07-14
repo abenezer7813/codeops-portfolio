@@ -1,0 +1,6 @@
+MedicineA ,150
+MedicineB ,-200
+MedicineC ,250
+MedicineD ,80
+MedicineE ,120
+MedicineF ,45
