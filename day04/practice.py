@@ -1,14 +1,14 @@
-# class Book:
-#     def __init__(self,title,author,pages):
-#         self.title=title
-#         self.author=author
-#         self.pages=pages
-#     def describe(self):
-#         print(f"{self.title} by {self.author}")
+class Book:
+    def __init__(self,title,author,pages):
+        self.title=title
+        self.author=author
+        self.pages=pages
+    def describe(self):
+        print(f"{self.title} by {self.author}")
 
-# book1=Book("fikir","kebede",145)
-# book2=Book("emegua","chala",255)
-# book1.describe()
+book1=Book("fikir","kebede",145)
+book2=Book("emegua","chala",255)
+book1.describe()
 
 class Product:
     def __init__(self,name,price,quantity):
