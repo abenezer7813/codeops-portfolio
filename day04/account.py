@@ -18,9 +18,9 @@ class Account:
         if amount>self.__balance:
             raise ValueError("you have low balance")
         self.__balance-=amount
-        
+    @property   
     def statement(self):
-        print(f"Account owner is {self.owner} \n Account Number {self.account_number}\n Current Balance {self.balance} ETB")
+        print(f"Account owner is {self.owner} \nAccount Number {self.account_number}\nCurrent Balance {self.balance} ETB")
         
 account1=Account("abenezer",1000286,1000)
 account1.deposit(2)
@@ -28,6 +28,7 @@ account2=Account("Tariku",1000360,2000)
 #account1.balance = 5000 
 print(account1.balance)
 print(account2.balance)
+account1.statement
 
 
 
