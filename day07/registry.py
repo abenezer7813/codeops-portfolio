@@ -99,7 +99,11 @@ class AccountRegistry:
     def find(self, number):
         return self.by_number.get(number) 
     def list_all(self):
-        return 
+        result = []
+        for num in self.order:
+          account = self.by_number[num]
+          result.append(account)
+        return result
 account1=Account("abenezer",1000286,1000)
 account1.deposit(2)
 account2=Account("Tariku",1000360,2000)
