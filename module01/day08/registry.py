@@ -1,6 +1,6 @@
 from typing import override
 
-from day08.practice import binary_search
+from module01.day08.practice import binary_search
 
 
 class Account:
