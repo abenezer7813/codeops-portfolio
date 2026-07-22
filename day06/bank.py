@@ -29,7 +29,10 @@ class Account:
         return f"Account owner is {self.owner} \nAccount Number {self.account_number}\nCurrent Balance {self.balance} ETB"
     def subscribe(self,observer):
         self._observers.append(observer)
-        
+    def _notify(self,message):
+        for observer in self._observers:
+            observer.update(self,message)
+   
    
 
 class  SavingAccount(Account):
