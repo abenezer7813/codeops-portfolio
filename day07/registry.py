@@ -75,6 +75,7 @@ class CurrentAccount(Account):
              raise ValueError("The amount is more than the the permitted overdraft limit")
          self._Account__balance-=amount
          self._notify(f"Withdrew {amount} ETB. New balance: {self._Account__balance} ETB")
+         self.history.append(("withdraw", amount))
 
     @override
     def statement(self):
@@ -127,8 +128,11 @@ saving_account=AccountFactory.create('savings',"Tariku",1000360,2000)
 current_account=AccountFactory.create('current',"chala",1000360,2000,)
 
 #checking overdraft
-current_account.withdraw(2300) 
+current_account.withdraw(1000) 
 print(current_account.balance)
+print(f'history {current_account.history} and balance {current_account.balance}')
+current_account.undo_last()
+print(f'history after undo call{current_account.history} and balance   {current_account.balance}')
 
 #printing statements
 accounts=[account1,account2,current_account,saving_account]
