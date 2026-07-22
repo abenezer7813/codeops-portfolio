@@ -35,6 +35,19 @@ class Account:
     def _notify(self,message):
         for observer in self._observers:
             observer.update(self,message)
+    def undo_last(self):
+        last_tx=0
+        if  self.history:
+         last_tx=self.history.pop()
+         if last_tx[0]=='deposit':
+             self.__balance-=last_tx[1]
+         elif last_tx[0]=='withdraw':
+             self.__balance+=last_tx[1]
+         else :
+             raise ValueError('Unknown transaction')
+        else :
+            raise ValueError ("No transaction")
+        
    
    
 
