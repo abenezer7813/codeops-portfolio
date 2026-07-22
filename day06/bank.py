@@ -40,7 +40,7 @@ class  SavingAccount(Account):
            super().__init__(owner, account_number, balance)
            #self.rate=rate
        def add_interest(self):
-           
+           config=BankConfig()
            self.deposit(self.balance *config.interest_rate)
 
        @override
@@ -54,7 +54,7 @@ class CurrentAccount(Account):
     
     @override
     def withdraw(self, amount):
-        
+         config=BankConfig()
          if amount > self.balance + config.overdraft_limit:
              raise ValueError("The amount is more than the the permitted overdraft limit")
          self._Account__balance-=amount
