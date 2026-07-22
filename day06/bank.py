@@ -93,8 +93,8 @@ class BankConfig:
 account1=Account("abenezer",1000286,1000)
 account1.deposit(2)
 account2=Account("Tariku",1000360,2000)
-saving_account=SavingAccount("Tariku",1000360,2000)
-current_account=CurrentAccount("chala",1000360,2000,)
+saving_account=AccountFactory.create('savings',"Tariku",1000360,2000)
+current_account=AccountFactory.create('current',"chala",1000360,2000,)
 
 #checking overdraft
 current_account.withdraw(2300) 
