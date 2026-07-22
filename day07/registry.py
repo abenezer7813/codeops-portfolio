@@ -1,0 +1,118 @@
+from typing import override
+
+
+class Account:
+    def __init__(self,owner,account_number,balance=0):
+        self.owner=owner
+        self.account_number=account_number
+        self.__balance=balance
+        self._observers=[]
+    @property
+    def balance(self):
+        return self.__balance
+    
+    def deposit(self,amount):
+        if amount<=0:
+            raise ValueError("amount cannot be below zero")
+        self.__balance+=amount
+        self._notify(f"Deposited {amount} ETB. New balance: {self.__balance} ETB")
+
+    def withdraw (self,amount):
+        if amount <=0:
+            raise ValueError("amount cannot be below zero")
+        if amount>self.__balance:
+            raise ValueError("you have low balance")
+        self.__balance-=amount
+        self._notify(f"Withdrew {amount} ETB. New balance: {self.__balance} ETB")
+      
+    def statement(self):
+        return f"Account owner is {self.owner} \nAccount Number {self.account_number}\nCurrent Balance {self.balance} ETB"
+    def subscribe(self,observer):
+        self._observers.append(observer)
+    def _notify(self,message):
+        for observer in self._observers:
+            observer.update(self,message)
+   
+   
+
+class  SavingAccount(Account):
+       def __init__(self, owner, account_number, balance=0):
+           super().__init__(owner, account_number, balance)
+           #self.rate=rate
+       def add_interest(self):
+           config=BankConfig()
+           self.deposit(self.balance *config.interest_rate)
+
+       @override
+       def statement(self):
+        return f"Account owner is {self.owner} \nAccount Number {self.account_number}\nAccount Type SavingAccount\nCurrent Balance {self.balance} ETB"
+
+class CurrentAccount(Account):
+    def __init__(self, owner, account_number,balance=0):
+        super().__init__(owner, account_number, balance)
+        #self.overdraft_limit=overdraft_limit
+    
+    @override
+    def withdraw(self, amount):
+         config=BankConfig()
+         if amount > self.balance + config.overdraft_limit:
+             raise ValueError("The amount is more than the the permitted overdraft limit")
+         self._Account__balance-=amount
+         self._notify(f"Withdrew {amount} ETB. New balance: {self._Account__balance} ETB")
+
+    @override
+    def statement(self):
+        return f"Account owner is {self.owner} \nAccount Number {self.account_number}\nAccount Type CurrentAcount\nCurrent Balance {self.balance} ETB"
+         
+
+class AccountFactory:
+    @staticmethod
+    def create(kind,owner,number ,balance=0):
+        if kind=='savings':
+            return SavingAccount(owner,number,balance)
+        elif kind =='current':
+            return CurrentAccount(owner,number,balance)
+        else:
+            raise ValueError("Unknown account kind")
+class SMSAlert:
+    def update(self,account,message):
+        print(f'SMS to {account.owner}: {message}')
+class AuditLog:
+    def update(self, account, message):
+        print(f"[AUDIT] Account {account.account_number}: {message}")
+
+class BankConfig:
+ _instance = None
+ def __new__(cls):
+  if cls._instance is None:
+   cls._instance = super().__new__(cls)
+   cls._instance.interest_rate = 0.05
+   cls._instance.overdraft_limit = 1000
+  return cls._instance
+class AccountRegistry:
+    def __init__(self):
+        self.by_number = {} 
+        self.order = [] 
+    def add(self, acc):
+        self.by_number[acc.account_number] = acc
+        self.order.append(acc.account_number)
+    def find(self, number):
+        return self.by_number.get(number) 
+    def list_all(self):
+        return 
+account1=Account("abenezer",1000286,1000)
+account1.deposit(2)
+account2=Account("Tariku",1000360,2000)
+saving_account=AccountFactory.create('savings',"Tariku",1000360,2000)
+current_account=AccountFactory.create('current',"chala",1000360,2000,)
+
+#checking overdraft
+current_account.withdraw(2300) 
+print(current_account.balance)
+
+#printing statements
+accounts=[account1,account2,current_account,saving_account]
+for account in accounts:
+    print(f"{account.statement()}\n")
+
+
