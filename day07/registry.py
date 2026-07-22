@@ -7,15 +7,18 @@ class Account:
         self.account_number=account_number
         self.__balance=balance
         self._observers=[]
+        self.history=[]
     @property
     def balance(self):
         return self.__balance
+    
     
     def deposit(self,amount):
         if amount<=0:
             raise ValueError("amount cannot be below zero")
         self.__balance+=amount
         self._notify(f"Deposited {amount} ETB. New balance: {self.__balance} ETB")
+        self.history.append(("deposit", amount))
 
     def withdraw (self,amount):
         if amount <=0:
@@ -24,7 +27,7 @@ class Account:
             raise ValueError("you have low balance")
         self.__balance-=amount
         self._notify(f"Withdrew {amount} ETB. New balance: {self.__balance} ETB")
-      
+        self.history.append(("withdraw", amount))
     def statement(self):
         return f"Account owner is {self.owner} \nAccount Number {self.account_number}\nCurrent Balance {self.balance} ETB"
     def subscribe(self,observer):
