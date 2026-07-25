@@ -77,3 +77,18 @@ print(isDual([1, 2, 1, 3, 3, 2])  )
 print(isDual([3, 1, 1, 2, 2,3])  )     
 print(isDual([2, 5, 2, 5, 5])  )     
 
+
+#question 6
+def digitalClock(seconds):
+    hour=0
+    minutes=0
+    sec=0
+    hour=int(seconds/3600)
+    minutes=int((seconds%3600)/60)
+    sec=seconds-((hour*3600)+(minutes*60))
+    while (hour>=24):# making 24 hour format by looping on it  
+        hour=hour-24
+    return f'{hour:02d}:{minutes:02d}:{sec:02d}'
+print(digitalClock(61201))
+print(digitalClock(87000))
+print(digitalClock(5025))
