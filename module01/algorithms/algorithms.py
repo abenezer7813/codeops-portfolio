@@ -36,7 +36,7 @@ def returnFactorial(number):
         factorial*=i
     return factorial
 
-print(returnFactorial(5)) #outputs 12
+print(returnFactorial(10)) #outputs 12
 print(returnFactorial(6)) #outputs 720
 print(returnFactorial(0)) #outputs 1
         
