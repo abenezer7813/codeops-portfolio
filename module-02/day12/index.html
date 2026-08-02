@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+content="Authentic Ethiopian dining
+in Bole. Reserve a table.">
+    <title>Habesha Eatery</title>
+    <style>
+        table, th, td {
+  border: 2px solid #080808;
+  border-collapse: collapse;
+}
+    </style>
+</head>
+<body>
+    <form action="/register" method="post">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" required>
+        <label for="tel">Tel</label>
+        <input type="tel" id="tel" pattern="09[0-9]{8}">
+        <label for="guests">Guests</label>
+        <input type="number" min=1 max=20 id="guests">
+        <label for="date">Date</label>
+        <input type="date" id="date">
+        <button type="submit">Reserve</button>
+    </form>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Dish Name</th>
+                <th scope="col">Price (ETB)</th>
+            </tr>
+        </thead>
+        <tbody>
+           <tr>
+      <th scope="row">Doro Wat</th>
+      <td>320 ETB</td>
+    </tr>
+    <tr>
+      <th scope="row">Tibs</th>
+      <td>280 ETB</td>
+    </tr>
+    <tr>
+      <th scope="row">Beyaynetu</th>
+      <td>200 ETB</td>
+    </tr>
+        </tbody>
+    </table>
+<img src="./assets/hero.png" alt="ethiopian best food" height="200" width="300" loading="lazy">
+<iframe 
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.543210987654!2d38.7890123!3d8.9876543!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwNTknMTUuNiJOIDM4wrA0NycyMC40IkU!5e0!3m2!1sen!2set!4v1234567890123!5m2!1sen!2set" 
+  title="Map location of Habesha Eatery in Bole, Addis Ababa"
+  width="600" 
+  height="450" 
+  style="border:0;" 
+  allowfullscreen="" 
+  loading="lazy" 
+  referrerpolicy="no-referrer-when-downgrade">
+</iframe></body>
+</html>
