@@ -1,0 +1,35 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  min-height: 100vh;
+  font-family: sans-serif;
+}
+
+/* Named Grid Areas */
+.header { grid-area: header; position: sticky; top: 0; z-index: 10; background: #8ec63f; color: white; padding: 1rem; }
+.sidebar { grid-area: sidebar; background: #222; color: white; padding: 1rem; }
+.main { grid-area: main; background: #f4f4f4; padding: 1.5rem; }
+.footer { grid-area: footer; background: #111; color: white; padding: 1rem; text-align: center; }
+
+@media (max-width: 700px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main"
+      "footer";
+  }
+}
