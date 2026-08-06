@@ -234,3 +234,34 @@ img {
   width: 100%;
   margin-top: 0.5rem;
 }
+.footer {
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  padding: 3rem 0 1rem;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-col h3 {
+  color: var(--color-accent);
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-col p {
+  font-size: 0.9rem;
+  color: #cccccc;
+}
+
+.footer-bottom {
+  border-top: 1px solid #333333;
+  text-align: center;
+  padding-top: 1rem;
+  font-size: 0.85rem;
+  color: #888888;
+}
