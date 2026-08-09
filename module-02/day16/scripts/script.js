@@ -3,16 +3,7 @@
 const billRaw ="567"
 const bill=Number(billRaw)
 const partySize=5;
- let totoal, perPerson,tip=0
-if(bill>300){
-    tip=(bill*10)/100
-    totoal=bill+tip
-    perPerson=totoal/partySize
-
-}else{
-    tip=(bill*5)/100
-    totoal=bill+tip
-    perPerson=totoal/partySize
-
-}
-console.log(`Total Bill ${totoal} ETB \nPer-Person ${perPerson} ETB`)
+const tip=bill>300?bill*0.1:bill*0.05;
+const total=bill+tip
+const perPerson=total/partySize
+console.log(`Total Bill ${total} ETB \nPer-Person ${perPerson} ETB`)
