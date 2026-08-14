@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Registration Form</title>
+</head>
+<body>
+
+  <h1>Register Contact</h1>
+   <p>Total people signed up: <strong id="signupCount">0</strong></p>
+  <form id="contactForm" novalidate>
+   
+    <div>
+      <label for="userName">Full Name</label>
+      <input type="text" id="userName" name="userName">
+    </div>
+
+    
+    <div>
+      <label for="userPhone">Phone Number</label>
+      <input type="tel" id="userPhone" name="userPhone">
+    </div>
+
+    <
+    <div style="color: red;" id="errorArea" role="alert" aria-live="assertive"></div>
+
+  
+    <button type="submit">Submit</button>
+  </form>
+
+
+
+</body>
+<script src="./scripts/app.js"></script>
+</html>
