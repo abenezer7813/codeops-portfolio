@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+}
+
+:root{
+    --primary: #085ece;
+    --secondary:#ce1b1b;
+    --space:10px;
+    --font:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.menu-card {
+ padding: 40px 40px;
+    margin: 100px 100px;
+    background-color: rgb(86, 85, 83);
+}
+.button{
+    background-color: var(--primary);
+    border: var(--secondary) 2px solid;
+    font-family: var(--font);
+    padding: var(--space);
+}
+
+.box{
+    width: 300px;
+    padding: 24px;
+    border: #085ece 2px solid;
+}
+table ,tbody,tr{
+    border-collapse: collapse;
+} 
+tr:nth-child(even){
+  background-color: #085ece;
+}
+th{
+    background-color: rgb(41, 40, 40);
+}
+td{
+    padding: var(--space) 30px;
+}
