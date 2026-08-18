@@ -1,0 +1,235 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+    background: #f4f7fb;
+    color: #172033;
+    padding: 40px 20px;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: -150px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    background: #dbeafe;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    bottom: -180px;
+    left: -180px;
+    width: 450px;
+    height: 450px;
+    background: #e0f2fe;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+body > * {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-size: 42px;
+    font-weight: 800;
+    text-align: center;
+    color: #111827;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+h1::first-letter {
+    color: #2563eb;
+}
+
+#status {
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* Converter Card */
+#convert-form {
+    background: #ffffff;
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e5e7eb;
+
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+#amount,
+#currency {
+    height: 50px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    background: #f9fafb;
+    padding: 0 15px;
+    font-size: 16px;
+    color: #172033;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+#amount {
+    flex: 1;
+    min-width: 0;
+}
+
+#currency {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+}
+
+#amount:focus,
+#currency:focus {
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+button {
+    height: 50px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+    white-space: nowrap;
+}
+
+button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Result */
+#result {
+    margin-top: 20px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #1e40af;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Watchlist */
+h2 {
+    margin-top: 40px;
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #111827;
+}
+
+#watchlist {
+    list-style: none;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+#watchlist li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 18px;
+    margin-bottom: 8px;
+
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #eef2f7;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+#watchlist li:last-child {
+    margin-bottom: 0;
+}
+
+#watchlist li:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    transform: translateX(3px);
+}
+
+/* Empty watchlist */
+#watchlist:empty::before {
+    content: "No currencies in your watchlist yet.";
+    display: block;
+    text-align: center;
+    padding: 25px 15px;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    body {
+        padding: 25px 15px;
+    }
+
+    h1 {
+        font-size: 34px;
+    }
+
+    #convert-form {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    #amount,
+    #currency,
+    button {
+        width: 100%;
+    }
+
+    #result {
+        font-size: 18px;
+    }
+
+    h2 {
+        margin-top: 30px;
+    }
+}
