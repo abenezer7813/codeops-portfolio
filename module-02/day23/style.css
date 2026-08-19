@@ -91,6 +91,12 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+#spicy{
+     color: var(--neutral);
+     padding: 0px 10px;
+    background-color: red;
+    border-radius: 10px;
+}
 
 .food-desc {
     margin-top: 8px;
