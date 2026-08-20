@@ -6,21 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Addis Eats</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
     <header>
         <div id="nav">
-            <div class="logo">Addis Eats</div>
-
+            <div class="logo"><i class="fa-solid fa-bars"></i>Addis Eats</div>
+            <button id="cart-btn"><i class="fa-solid fa-cart-shopping"></i></button>
             <nav>
                 <a href="" class="nav">Home</a>
                 <a href="" class="nav">Traditional</a>
                 <a href="" class="nav">Fast Food</a>
                 <a href="" class="nav">Drinks</a>
             </nav>
+
         </div>
+     
     </header>
 
     <main>
@@ -34,7 +37,7 @@
 
             <div class="search">
                 <input id="search" type="text" placeholder="Search delicious foods">
-                <span id="cart"></span>
+
             </div>
 
             <div class="filter">
@@ -46,11 +49,26 @@
 
             <div class="menu-cards">
 
-               
+
             </div>
 
         </section>
+        <section id="cart-sec">
+            <div class="close">
+                <span>Your Cart</span>
+                <button id="close-btn">X</button>
+            </div>
+            <div id="cart-items">
 
+            </div>
+            </div>
+            <hr>
+            <div class="total">
+                <p>Total</p>
+                <p id="subtotal">0 ETB</p>
+            </div>
+            <button id="checkout">Checkout</button>
+        </section>
     </main>
 
     <footer>
