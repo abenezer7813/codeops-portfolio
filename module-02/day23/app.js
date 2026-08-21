@@ -46,9 +46,15 @@ menuContainer.addEventListener('click', (e) => {
 
 const cartContainer = document.querySelector('#cart-items')
 const subTotal = document.querySelector('#subtotal')
-
+const checkoutBtn = document.querySelector('#checkout-btn')
 function renderCart() {
     let total = 0
+    if (state.cart.length === 0) {
+        console.log(state.cart.length);
+        checkoutBtn.disabled = true
+    } else {
+        checkoutBtn.disabled = false
+    }
     cartContainer.innerHTML = state.cart.map(item => {
         console.log(item.name);
         total += item.price * item.qty
@@ -60,9 +66,24 @@ function renderCart() {
 
 const closeBtn = document.querySelector('#close-btn')
 const cartBtn = document.querySelector('#cart-btn')
-cartBtn.addEventListener('click', () => cart.classList.add('show'))
+const checkoutSec=document.querySelector('#checkout-sec')
+cartBtn.addEventListener('click', () => {
+    cart.classList.add('show')
+    console.log(state.cart.length);
+    
+    document.body.style.overflow = "hidden";
+})
+checkoutBtn.addEventListener('click', (e) => {
+    checkoutSec.classList.add('show')
+    cart.classList.remove('show');
+     document.body.style.overflow = '';
+})
 const cart = document.querySelector('#cart-sec')
-closeBtn.addEventListener('click', () => { cart.classList.remove('show'); });
+closeBtn.addEventListener('click', () => {
+    cart.classList.remove('show');
+     document.body.style.overflow = '';
+   
+});
 
 const cartItem = document.querySelector('#cart-items')
 cartItem.addEventListener('click', (e) => {
@@ -80,7 +101,9 @@ cartItem.addEventListener('click', (e) => {
         const item = state.cart.find(i => i.id === id);
         if (item) {
             item.qty--;
-             if(item.qty==0) state.cart.pop(item)
+            if (item.qty === 0) {
+                state.cart = state.cart.filter(i => i.id !== id)
+            } (item)
             renderCart()
             save()
         }
@@ -95,15 +118,100 @@ function save() {
 
 function load() {
     const savedCart = localStorage.getItem(key);
+    console.log("BEFORE PARSE:", savedCart);
     if (savedCart) {
-        state.cart = JSON.parse(savedCart);
-        renderCart()
+        console.log("savedCart:", savedCart);
+        console.log("state.cart:", state.cart);
+        console.log("length:", state.cart.length);
+
+        renderCart();
     }
 }
 
 async function init() {
- await   loadMenu()
+    await loadMenu()
     load()
 }
 
 init()
+
+const formEl = document.querySelector('#checkout-form')
+const nameIn = document.querySelector('#name')
+const phoneIn = document.querySelector('#phone')
+const deliveryAriaIn = document.querySelector('#area')
+const errorEl = document.querySelector('#form-error')
+
+formEl.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const name = nameIn.value.trim()
+    const phone = phoneIn.value.trim()
+    const deliveryAria = deliveryAriaIn.value
+    const error = validate(name, phone)
+
+    errorEl.textContent = error
+    if (error) return
+    const data = { name, phone }
+    palaceOrder(data)
+      checkoutSec.classList.remove('show')
+
+})
+
+function validate(name, phone) {
+
+    const regEx = /^(?:\+251|0)9\d{8}$/
+
+    console.log(name);
+
+    if (!name) return "Name field cannot be empty"
+
+
+    if (name.length < 2) return "Name cannot be less than two letters"
+    if (!phone) return 'Phone field cannot be empty '
+    if (!regEx.test(phone)) return 'Please enter phone number in valid format'
+    return ""
+}
+
+function palaceOrder(data) {
+    const order = {
+        ...data,
+        items: state.cart,
+        total: 1000,
+        placedAt: new Date().toISOString()
+    }
+    console.log(order);
+    state.cart = []
+    save(); renderCart()
+    showConfirmation(order)
+
+}
+const confirmSection = document.querySelector('#confirmation')
+function showConfirmation(order) {
+    console.log(order);
+    confirmSection.innerHTML = `<div id="confirm-card">
+                
+                <h2>Order Placed Successfully</h2>
+                 <div> 
+                    <p>Name</p>
+                    <p>${order.name}</p>
+                </div>
+                <div> 
+                    <p>Phone</p>
+                    <p>${order.phone}</p>
+                </div>
+                <div> 
+                    <p>Items</p>
+                    <div id="ordered-items">${order.items.map(item => `<p>${item.name}</p>`).join('')}<div/>
+                </div>
+
+                <div> 
+                    <p>Total</p>
+                    <p>${calcTotal(order.items)}</p>
+                </div>
+            </div>`
+}
+
+function calcTotal(items){
+    let total=0
+    items.map(item=> total +=item.price*item.qty)
+    return total
+}

@@ -23,7 +23,7 @@
             </nav>
 
         </div>
-     
+
     </header>
 
     <main>
@@ -61,13 +61,37 @@
             <div id="cart-items">
 
             </div>
+            
+            <div id="checkout">
+                <hr>
+                <div class="total">
+                    <p>Total</p>
+                    <p id="subtotal">0 ETB</p>
+                </div>
+                <button id="checkout-btn">Checkout</button>
             </div>
-            <hr>
-            <div class="total">
-                <p>Total</p>
-                <p id="subtotal">0 ETB</p>
-            </div>
-            <button id="checkout">Checkout</button>
+        </section>
+        <section id="checkout-sec" >
+            <form id="checkout-form" novalidate>
+                <label>Name
+                    <input id="name" type="text" required />
+                </label>
+                <label>Phone 
+                    <input type="tel" id="phone" placeholder="09xxxxxxxx" />
+                </label>
+                <label>Delivery area
+                    <select id="area">
+                        <option>Bole</option>
+                        <option>Kazanchis</option>
+                        <option>Megenagna</option>
+                    </select>
+                </label>
+                <p id="form-error" class="error"></p>
+                <button type="submit">Place order</button>
+            </form>
+        </section>
+        <section id="confirmation">
+
         </section>
     </main>
 
