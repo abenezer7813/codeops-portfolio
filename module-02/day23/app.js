@@ -1,4 +1,5 @@
 const state = { dishes: [], cart: [], search: "" }
+
 const menuContainer = document.querySelector('.menu-cards')
 const searchIn = document.querySelector('#search')
 const addCartBtn = document.querySelector('.add-cart')
@@ -50,6 +51,7 @@ const checkoutBtn = document.querySelector('#checkout-btn')
 function renderCart() {
     let total = 0
     if (state.cart.length === 0) {
+        cartContainer.innerHTML=`<p>Your Cart is Empty</p>`
         console.log(state.cart.length);
         checkoutBtn.disabled = true
     } else {
@@ -67,6 +69,7 @@ function renderCart() {
 const closeBtn = document.querySelector('#close-btn')
 const cartBtn = document.querySelector('#cart-btn')
 const checkoutSec=document.querySelector('#checkout-sec')
+
 cartBtn.addEventListener('click', () => {
     cart.classList.add('show')
     console.log(state.cart.length);
@@ -128,12 +131,7 @@ function load() {
     }
 }
 
-async function init() {
-    await loadMenu()
-    load()
-}
 
-init()
 
 const formEl = document.querySelector('#checkout-form')
 const nameIn = document.querySelector('#name')
@@ -215,3 +213,9 @@ function calcTotal(items){
     items.map(item=> total +=item.price*item.qty)
     return total
 }
+async function init() {
+    await loadMenu()
+    load()
+}
+
+init()

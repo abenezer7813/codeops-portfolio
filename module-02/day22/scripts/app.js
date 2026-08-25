@@ -84,7 +84,6 @@ function load() {
 }
 async function init() {
     load(); 
-
     render(); 
     await fetchRates(); 
 }
