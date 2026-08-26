@@ -1,0 +1,10 @@
+.dish{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+   border: 1px greenyellow solid;
+   border-radius: 10px;
+   overflow: hidden;
+   height: 25vh;
+}
