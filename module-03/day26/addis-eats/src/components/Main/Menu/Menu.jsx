@@ -34,6 +34,7 @@ function Menu() {
     category === 'All'
       ? menu
       : menu.filter((dish) => dish.category === category)
+      const [ clicked,setClicked]=useState(false)
 
   return (
     <>
@@ -41,23 +42,23 @@ function Menu() {
 
       <div >
         <div className="categories">
-        <button onClick={() => setCategory('All')}>
+        <button   className={category === 'All' ? 'active' : ''} onClick={() => setCategory('All')}>
           All
         </button>
 
-        <button onClick={() => setCategory('Main')}>
+        <button   className={category === 'Main' ? 'active' : ''} onClick={() => setCategory('Main')}>
           Main
         </button>
 
-        <button onClick={() => setCategory('Vegetarian')}>
+        <button   className={category === 'Vegetarian' ? 'active' : ''} onClick={() => setCategory('Vegetarian')}>
           Vegetarian
         </button>
 
-        <button onClick={() => setCategory('Breakfast')}>
+        <button   className={category === 'Breakfast' ? 'active' : ''} onClick={() => setCategory('Breakfast')}>
           Breakfast
         </button>
 
-        <button onClick={() => setCategory('Side')}>
+        <button   className={category === 'Side' ? 'active' : ''} onClick={() => setCategory('Side')}>
           Side
         </button>
       </div>
