@@ -1,19 +1,24 @@
-import React from 'react'
-import './Dish.css'
-const image ="../../../../assets/doro.png"
-function Dish(
-    { dish }
-) {
-    const { name, price, description,spicy} = dish
+import PropTypes from "prop-types";
+import "./Dish.css";
+import { Flame } from "lucide-react";
+
+function Dish({ name, price, spicy }) {
     return (
-        <div className='dish'>
-            {/* <div className='image'><img src='./doro.png' alt={name} /></div> */}
-            <div className='name'>{name}</div>
-            <div className='price'>{price} ETB</div>
-            {/* {spicy?<div className='spicy'>Spicy</div>:<div></div>}
-            <div className='description'>{description}</div> */}
+        <div className="dish">
+            <div className="name">{name}</div>
+            <div className="price">{price} ETB</div>
+
+            {spicy && (
+                <div className="spicy">🌶️<span>Spicy</span></div>
+            )}
         </div>
-    )
+    );
 }
 
-export default Dish
+Dish.propTypes = {
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    spicy: PropTypes.bool,
+};
+
+export default Dish;
