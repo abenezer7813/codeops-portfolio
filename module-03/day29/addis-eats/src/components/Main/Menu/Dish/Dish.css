@@ -1,0 +1,17 @@
+.dish{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+   border: 1px greenyellow solid;
+   border-radius: 10px;
+   overflow: hidden;
+   height: 25vh;
+}
+.spicy span{
+    background-color: red;
+    color: white;
+    border-radius: 10px;
+    padding: 0px 5px;
+   
+}

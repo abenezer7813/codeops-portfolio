@@ -1,0 +1,16 @@
+.menu{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+     gap: 5px;
+    
+}
+
+.total{
+    display: inline-block;
+    background-color: rgb(84, 82, 82);
+    padding: 20px ;
+    margin: 10px;
+    font-size: larger;
+    color: white;
+    border-radius: 10px;
+}

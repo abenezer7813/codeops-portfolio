@@ -1,0 +1,20 @@
+.menu{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+     gap: 5px;
+    
+}
+.categories{
+    display: flex;
+    gap: 10px;
+    margin: 20px 0px;
+
+}
+.categories button{
+padding: 5px 15px;
+border: none;
+border-radius: 20px;
+}
+.categories  .active{
+background-color: greenyellow;
+}
