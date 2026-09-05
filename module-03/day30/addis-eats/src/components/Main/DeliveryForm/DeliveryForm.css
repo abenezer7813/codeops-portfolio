@@ -1,0 +1,22 @@
+.delivery-form{
+    display: flex;
+}
+.delivery-form input,
+.delivery-form select{
+    border: none;
+    background-color: aliceblue;
+    padding: 15px 20px;
+    border-radius: 20px;
+    
+}
+.delivery-form input:focus,
+.delivery-form select:focus{
+    outline: 1px greenyellow solid;
+    
+}
+.error{
+color: red;
+
+font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+}
