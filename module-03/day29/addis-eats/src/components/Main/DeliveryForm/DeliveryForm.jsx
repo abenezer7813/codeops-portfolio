@@ -1,12 +1,16 @@
 import { func } from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState,useRef,useEffect } from 'react'
 import './DeliveryForm.css'
 function DeliveryForm() {
     const [form, setForm] = useState({
         name: '', phone: '', area: ''
     })
     const [errors, setErrors] = useState({});
-
+ const phoneRef = useRef(null);
+    useEffect(() => {
+        phoneRef.current.focus(); // the real <input>
+    }, []);
+   
     function handleChange(e) {
         const { name, value } = e.target;
 
@@ -50,6 +54,8 @@ function DeliveryForm() {
             }
         }
     }
+
+   
     return (
         <div className='delivery-form'>
             <form action="">
@@ -61,7 +67,7 @@ function DeliveryForm() {
                 </div>
                 <div>
                     <label htmlFor="name">Phone</label>
-                    <input type='tel' name='phone' id='phone'
+                    <input ref={phoneRef} type='tel' name='phone' id='phone'
                         onChange={handleChange} />
                     {errors.phone && <p className='error'>{errors.phone}</p>}
                 </div>
