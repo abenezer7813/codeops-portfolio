@@ -1,6 +1,7 @@
 import { getDishes } from "./dishes";
 import MenuCard from "./menu-card/MenuCard";
 
+export const revalidate = 3600; 
 
 export default async function MenuPage() {
   const dishes = await getDishes();
