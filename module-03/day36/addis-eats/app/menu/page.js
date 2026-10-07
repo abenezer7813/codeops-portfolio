@@ -1,15 +1,7 @@
-import { getDishes } from "./dishes";
-import MenuCard from "./menu-card/MenuCard";
+import React from 'react'
 
-
-export default async function MenuPage() {
-  const dishes = await getDishes();
-
+export default function MenuPage() {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {dishes.map((d) => (
-        <MenuCard key={d.id} data={d} />
-      ))}
-    </div>
-  );
+    <div>MenuPage</div>
+  )
 }
