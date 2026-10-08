@@ -1,7 +1,7 @@
 import React from 'react'
-export const dynamic = "force-dynamic";
-export default function Checkout() {
+
+export default function CheckoutPage() {
   return (
-    <div>Checkout</div>
+    <div>CheckoutPage</div>
   )
 }
