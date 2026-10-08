@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function MenuPage() {
   return (
-    <div>MenuPage</div>
+    <div className='flex justify-self-center text-5xl'>MenuPage</div>
   )
 }
