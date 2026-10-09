@@ -1,7 +1,9 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import CategoryBar from '../CategoryBar'
 
-export default function layout({children}) {
+export default function MenuLayout({children}) {
+    const [count,setCount]=useState(0)
 const categories = [
         "All",
         "Traditional Stews & Wat",
@@ -12,7 +14,9 @@ const categories = [
     ]
   return (
 <div>
+    <button onClick={()=>setCount(count+1)}> click me {count}</button>
     <CategoryBar categories={categories}/>
+
     {children}</div>
   )
 }
