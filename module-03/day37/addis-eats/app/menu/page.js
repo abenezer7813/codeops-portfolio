@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-export const revalidate=3600
+export const revalidate = 3600;
 export default function MenuPage() {
 
   return (
