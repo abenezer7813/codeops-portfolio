@@ -1,25 +1,21 @@
+"use client";
+
 import React from "react";
 import { FiPlus } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import { useCartStore } from "../../store/cartStore";
+// import { useCartStore } from "../../store/cartStore";
 
-function DishList({ data }) {
-  const addItem = useCartStore((s) => s.addItem);
-  const navigate = useNavigate();
+function DishList({ dishes }) {
+  // const addItem = useCartStore((s) => s.addItem);
 
-  function handleClick() {
-    navigate(`/menu/${data.id}`, { state: data });
-  }
-
-  return (
+  return dishes.map((data) => (
     <div
-      onClick={handleClick}
+      key={data.id}
       className="group flex cursor-pointer flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--white)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(122,31,31,0.12)]"
     >
       <div>
         <img
-          src="doro.png"
-          alt=""
+          src={data.image || "/doro.png"}
+          alt={data.nameEn}
           className="transition-transform duration-300 ease-in-out group-hover:scale-105"
         />
       </div>
@@ -35,10 +31,10 @@ function DishList({ data }) {
         <span className="text-[larger] font-bold text-[color:var(--primary-dark)]">
           {data.priceETB} ETB
         </span>
+
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            addItem(data, 1);
+          onClick={() => {
+            // addItem(data, 1);
           }}
           className="cursor-pointer rounded-[var(--radius-md)] border-0 bg-[var(--brown)] px-[15px] py-0 text-[color:var(--white)] transition-[transform,background-color] duration-200 hover:bg-[var(--primary-dark)] active:translate-y-0.5"
         >
@@ -46,7 +42,7 @@ function DishList({ data }) {
         </button>
       </div>
     </div>
-  );
+  ));
 }
 
 export default DishList;
