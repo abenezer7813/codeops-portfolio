@@ -2,15 +2,18 @@
 
 import React from "react";
 import { FiPlus } from "react-icons/fi";
+import AddToCartButton from "./AddToCartButton";
+import { useRouter } from "next/navigation";
 // import { useCartStore } from "../../store/cartStore";
 
 function DishList({ dishes }) {
   // const addItem = useCartStore((s) => s.addItem);
-
+const router=useRouter()
   return dishes.map((data) => (
     <div
       key={data.id}
-      className="group flex cursor-pointer flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--white)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(122,31,31,0.12)]"
+      className="group flex flex-col gap-4 cursor-pointer  overflow-hidden rounded-[var(--radius-md)] bg-[var(--white)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(122,31,31,0.12)]"
+      onClick={()=>router.push(`/menu/${data.id}`)}
     >
       <div>
         <img
@@ -32,14 +35,7 @@ function DishList({ dishes }) {
           {data.priceETB} ETB
         </span>
 
-        <button
-          onClick={() => {
-            // addItem(data, 1);
-          }}
-          className="cursor-pointer rounded-[var(--radius-md)] border-0 bg-[var(--brown)] px-[15px] py-0 text-[color:var(--white)] transition-[transform,background-color] duration-200 hover:bg-[var(--primary-dark)] active:translate-y-0.5"
-        >
-          <FiPlus /> Add
-        </button>
+       <AddToCartButton data={data}/>
       </div>
     </div>
   ));

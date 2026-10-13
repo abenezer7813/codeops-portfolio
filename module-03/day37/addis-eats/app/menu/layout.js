@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import CategoryBar from '../CategoryBar'
 
 export default function MenuLayout({children}) {
-    const [count,setCount]=useState(0)
+    
 const categories = [
         "All",
         "Traditional Stews & Wat",
@@ -13,8 +13,8 @@ const categories = [
         "Beverages & Tej"
     ]
   return (
-<div>
-    <button onClick={()=>setCount(count+1)}> click me {count}</button>
+<div className='flex h-100%'>
+   
     <CategoryBar categories={categories}/>
 
     {children}</div>

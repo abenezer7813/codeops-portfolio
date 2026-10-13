@@ -12,9 +12,9 @@ console.log(dishes);
 
 
   return (
-    <div className='flex justify-self-center text-5xl'>
-    <Suspense fallback={<DishSkeleton/>}><DishList dishes={dishes}/></Suspense>
-    <Link href="/menu/1">dish detail</Link>
+    <div  className='grid grid-cols-[1fr-3fr]'>
+   <div className='grid grid-cols-4'> <Suspense fallback={<DishSkeleton/>}><DishList dishes={dishes}/></Suspense>
+   </div>
 
    </div>
   )
