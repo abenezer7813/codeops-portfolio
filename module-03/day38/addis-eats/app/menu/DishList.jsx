@@ -1,15 +1,44 @@
-// app/menu/DishList.jsx  (server component, no "use client")
-import { getDishes } from "./dishes";
-import MenuCard from "./menu-card/MenuCard";
+"use client";
 
-export default async function DishList() {
-  const dishes = await getDishes();
+import React from "react";
+import { FiPlus } from "react-icons/fi";
+import AddToCartButton from "./AddToCartButton";
+import { useRouter } from "next/navigation";
+// import { useCartStore } from "../../store/cartStore";
 
-  return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {dishes.map((d) => (
-        <MenuCard key={d.id} data={d} />
-      ))}
+function DishList({ dishes }) {
+  // const addItem = useCartStore((s) => s.addItem);
+const router=useRouter()
+  return dishes.map((data) => (
+    <div
+      key={data.id}
+      className="group flex flex-col gap-4 cursor-pointer  overflow-hidden rounded-[var(--radius-md)] bg-[var(--white)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(122,31,31,0.12)]"
+      onClick={()=>router.push(`/menu/${data.id}`)}
+    >
+      <div>
+        <img
+          src={data.image || "/doro.png"}
+          alt={data.nameEn}
+          className="transition-transform duration-300 ease-in-out group-hover:scale-105"
+        />
+      </div>
+
+      <div className="p-2.5">
+        <div className="font-[family-name:var(--font-heading)] text-2xl font-bold text-black">
+          {data.nameEn}
+        </div>
+        <div>{data.description}</div>
+      </div>
+
+      <div className="flex justify-between bg-[var(--background-warm)] px-2.5 py-[5px]">
+        <span className="text-[larger] font-bold text-[color:var(--primary-dark)]">
+          {data.priceETB} ETB
+        </span>
+
+       <AddToCartButton data={data}/>
+      </div>
     </div>
-  );
+  ));
 }
+
+export default DishList;

@@ -1,72 +1,96 @@
-"use client";
+'use client'
+import React from "react";
 
+import { useCartStore } from "@/store/cartStore";
+import { useAuthStore } from "@/store/authStore";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 function Header() {
-  const pathname = usePathname();
+  const logout = useAuthStore((s) => s.logout);
+  const user = useAuthStore((s) => s.user);
 
-  const user = null;
-  const cartCount = 0;
-  const cartTotal = 0;
+  const cartCount = useCartStore((s) =>
+    s.items.reduce((count, item) => count + item.quantity, 0)
+  );
 
-  const navClass = (path) =>
-    `px-2.5 py-2.5 rounded-md no-underline ${
-      pathname === path
-        ? "bg-[var(--primary-dark)] text-white"
-        : "text-inherit"
+  const cartTotal = useCartStore((s) =>
+    s.items.reduce(
+      (total, item) => total + item.priceETB * item.quantity,
+      0
+    )
+  );
+
+  const router = useRouter();
+
+  function handleLogout() {
+    logout();
+    router.push("/login");
+  }
+  const pathname=usePathname()
+  const navLinkClass = (pathname) =>
+    `rounded-md px-3 py-2 no-underline transition-colors ${
+      pathname
+        ? "bg-(--primary-dark) text-(--white) hover:text-(--surface)"
+        : "hover:text-(--primary-dark)"
     }`;
 
   return (
-    <header className="sticky top-0 z-[1000] flex justify-evenly border-b border-[var(--border)] bg-[var(--white)] px-[50px] py-5 shadow-[var(--shadow-md)]">
+    <header className="sticky top-0 z-50 flex items-center justify-evenly border-b border-(--border) bg-(--white) px-6 py-5 shadow-(--shadow-md) max-md:flex-wrap max-md:gap-4">
       <Link
         href="/menu"
-        className="text-inherit no-underline"
+        className="text-xl font-bold no-underline text-(--primary-dark)"
       >
         Mesob Habesha House
       </Link>
 
-      <nav className="flex gap-2.5">
-        <Link
-          href="/menu"
-          className={navClass("/menu")}
-        >
-          Menu
-        </Link>
+      <div className="flex items-center gap-3">
+        {  (
+          <nav className="flex items-center gap-2 max-md:flex-wrap">
+            <Link href="/menu" className={navLinkClass('/menu')}>
+              Menu
+            </Link>
 
-        <Link
-          href="/cart"
-          className={navClass("/cart")}
-        >
-          Order & Cart
-        </Link>
+            <Link href="/cart" className={navLinkClass('/cart')}>
+              Order & Cart
+            </Link>
 
-        <Link
-          href="/checkout"
-          className={navClass("/checkout")}
-        >
-          Delivery & Checkout
-        </Link>
+            <Link href="/checkout" className={navLinkClass}>
+              Delivery & Checkout
+            </Link>
 
-        <div className="flex flex-col rounded-md bg-[var(--background)] px-[25px]">
-          <div>{cartCount} Items</div>
+            <div className="flex flex-col rounded-md bg-(--background) px-6 py-2">
+              <span>{cartCount} Items</span>
+              <span className="font-bold text-(--gold)">
+                {cartTotal} ETB
+              </span>
+            </div>
 
-          <div className="font-bold text-[var(--gold)]">
-            {cartTotal} ETB
-          </div>
-        </div>
+            <span>Hi, {"user.name"}</span>
 
-        <span className="px-2.5 py-2.5">
-          Hi, Guest
-        </span>
+            <button
+              className="cursor-pointer border-0 bg-transparent px-3 py-2 text-(--primary-dark)"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </nav>
+        )}
 
-        <button className="cursor-pointer border-none bg-transparent text-[var(--primary-dark)]">
-          Logout
-        </button>
-      </nav>
+        {!user && (
+          <nav className="flex items-center gap-2">
+            <Link href="/login" className={navLinkClass}>
+              Sign In
+            </Link>
+
+            <Link href="/register" className={navLinkClass}>
+              Register
+            </Link>
+          </nav>
+        )}
+      </div>
     </header>
   );
 }
 
 export default Header;
-

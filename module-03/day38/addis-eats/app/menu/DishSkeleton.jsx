@@ -1,10 +1,9 @@
+import React from 'react'
 
-export default function DishSkeleton() {
+function DishSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="h-48 animate-pulse rounded-lg bg-gray-200" />
-      ))}
-    </div>
-  );
+    <div className="group flex cursor-pointer flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--white)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(122,31,31,0.12)]">DishSkeleton</div>
+  )
 }
+
+export default DishSkeleton

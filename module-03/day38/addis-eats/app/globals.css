@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 
+
 :root {
   /* =========================
      COLORS
@@ -132,3 +133,6 @@ img {
   display: block;
   max-width: 100%;
 }
+
+
+

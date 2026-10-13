@@ -1,15 +1,13 @@
-// app/menu/FilterShell.jsx
-"use client";
-import { useState } from "react";
+'use client'
+import React from 'react'
 
-export default function FilterShell({ children }) {
-  const [open, setOpen] = useState(true);
+function FilterShell({children}) {
   return (
-    <div>
-      <button onClick={() => setOpen((o) => !o)}>
-        {open ? "Hide dishes" : "Show dishes"}
-      </button>
-      {open && children}
+    <div className='grid grid-cols-4'>
+    {children}
     </div>
-  );
+    
+  )
 }
+
+export default FilterShell
