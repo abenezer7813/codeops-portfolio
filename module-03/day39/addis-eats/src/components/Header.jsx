@@ -55,7 +55,7 @@ function Header() {
               Order & Cart
             </Link>
 
-            <Link href="/checkout" className={navLinkClass}>
+            <Link href="/checkout" className={`${navLinkClass}`}>
               Delivery & Checkout
             </Link>
 
