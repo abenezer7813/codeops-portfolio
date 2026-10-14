@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import z from 'zod'
 import { useCartStore } from '@/store/cartStore'
 import { orderSchema } from '@/schema'
 import { placeOrder } from '../actions'
@@ -17,7 +16,7 @@ const paymentMethods = [
 ]
 
 export default function Checkout() {
-  const user = {'name':'ab','email':'zxc'}
+  const user = {'name':'ab','email':'ab@gmail.com'}
   const clearCart = useCartStore((s) => s.clearCart)
   const cart = useCartStore((s) => s.items)
   const cartTotal = useCartStore((s) =>
@@ -39,6 +38,8 @@ export default function Checkout() {
 
   
   const [errors, setErrors] = useState({})
+
+  const [state,formAction,pending]=useActionState(placeOrder,null)
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -100,7 +101,7 @@ async  function handleConfirm(e) {
       </div>
 
       <form
-      action={placeOrder}
+      action={formAction}
         className="grid grid-cols-1 items-start gap-6 md:grid-cols-[2fr_1fr]"
        // onSubmit={handleConfirm}
       >
@@ -352,10 +353,11 @@ async  function handleConfirm(e) {
           </div>
 
           <button
+          disabled={pending}
             type="submit"
             className="mt-4 w-full rounded-lg border-0 bg-[#7a1f1f] p-3.5 font-semibold text-white hover:bg-[#611818]"
           >
-            Confirm Order & Pay ETB {grandTotal} →
+           { pending?"Sending":`Confirm Order & Pay ETB ${grandTotal} →`}
           </button>
         </aside>
       </form>
