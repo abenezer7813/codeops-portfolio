@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import z from 'zod'
 import { useCartStore } from '@/store/cartStore'
 import { orderSchema } from '@/schema'
+import { placeOrder } from '../actions'
 
 
 
@@ -99,8 +100,9 @@ async  function handleConfirm(e) {
       </div>
 
       <form
+      action={placeOrder}
         className="grid grid-cols-1 items-start gap-6 md:grid-cols-[2fr_1fr]"
-        onSubmit={handleConfirm}
+       // onSubmit={handleConfirm}
       >
         <div>
           <section className="mb-5 rounded-xl border border-[#f0e0d0] bg-white p-5">
