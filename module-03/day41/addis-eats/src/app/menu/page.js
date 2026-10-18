@@ -3,6 +3,7 @@ import DishList from './DishList';
 import DishSkeleton from './DishSkeleton';
 import { getDishes } from './dishes';
 import FilterShell from './FilterShell';
+import SearchBox from './components/SearchBox';
 
 export const revalidate = 3600;
 
@@ -13,8 +14,10 @@ export default async function MenuPage() {
 
 
   return (
-    <div className='grid grid-cols-[1fr-3fr]'>
+    <div >
+     
       <div>
+      
         <Suspense fallback={<DishSkeleton />}>
           <FilterShell >
             <DishList  dishes={dishes} />

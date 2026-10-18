@@ -16,6 +16,7 @@ export default function OrderStatus({ orderId, initialOrder }) {
   );
 
   if (error) {
+    console.log(error);
     return <p>Unable to refresh order status.</p>;
   }
 

@@ -6,6 +6,7 @@ import { getOrder } from "@/db";
 export default async function OrderPage({ params }) {
   const { id } = await params;
   const order = await getOrder(id);
+  console.log(order);
 
   if (!order) {
     notFound();

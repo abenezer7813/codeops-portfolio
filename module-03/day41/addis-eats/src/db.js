@@ -44,7 +44,59 @@ const mockDishes = [
 ];
 
 // In-memory orders store
-const mockOrders = [];
+const mockOrders = [
+  {
+    id: "ord_165",
+    userId: "user_addis_101",
+    items: [
+      {
+        dishId: "dish_1",
+        name: "Doro Wat",
+        price: 350,
+        quantity: 2,
+      },
+      {
+        dishId: "dish_2",
+        name: "Beyaynetu",
+        price: 220,
+        quantity: 1,
+      },
+    ],
+    total: 920,
+    status: "PENDING",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "ord_166",
+    userId: "user_addis_101",
+    items: [
+      {
+        dishId: "dish_3",
+        name: "Kitfo",
+        price: 400,
+        quantity: 1,
+      },
+    ],
+    total: 400,
+    status: "PREPARING",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "ord_167",
+    userId: "user_addis_101",
+    items: [
+      {
+        dishId: "dish_4",
+        name: "Shiro Tegabeno",
+        price: 180,
+        quantity: 2,
+      },
+    ],
+    total: 360,
+    status: "READY",
+    createdAt: new Date().toISOString(),
+  },
+];
 
 // Mock authenticated user session
 const mockSessionUser = {
@@ -96,7 +148,7 @@ export async function createOrder(data) {
  */
 export async function getOrder(id) {
   const order = mockOrders.find((o) => o.id === id);
-  return order || null;
+  return mockOrders || null;
 }
 
 /**
