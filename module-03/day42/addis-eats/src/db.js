@@ -171,3 +171,33 @@ export async function markCancelled(id) {
 export async function getSession() {
   return mockSessionUser;
 }
+
+const mockUsers = [];
+
+export async function createUser(data) {
+    const exists = mockUsers.some(
+        (user) => user.email === data.email
+    );
+
+    if (exists) {
+        throw new Error("An account with this email already exists");
+    }
+
+    const newUser = {
+        id: `user_${Date.now()}`,
+        name: data.name,
+        email: data.email,
+        password: data.password,
+    };
+
+    mockUsers.push(newUser);
+
+    return {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+    };
+}
+export async function findUserByEmail(email) {
+    return mockUsers.find((user) => user.email === email) || null;
+}
