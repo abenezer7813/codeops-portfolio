@@ -1,5 +1,9 @@
 import { db } from "@/db";
-
+export const metadata = {
+  title: "Your Orders",
+  description:
+    "View your food orders and check their latest status with Addis Eats.",
+};
 export default async function Page() {
   const orders = await db.order.findMany();
 

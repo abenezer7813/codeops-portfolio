@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 
-export default function   Cart() {
+export default function Cart() {
   const cart = useCartStore((s) => s.items)
   const updateQuantity = useCartStore((s) => s.updateQuantity)
   const cartTotal = useCartStore((s) =>

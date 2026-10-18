@@ -2,7 +2,14 @@ import { notFound } from "next/navigation";
 
 import OrderStatus from "./OrderStatus";
 import { getOrder } from "@/db";
+export async function generateMetadata({ params }) {
+  const { id } = await params;
 
+  return {
+    title: `Order ${id}`,
+    description: `Check the status and details of your Addis Eats food order.`,
+  };
+}
 export default async function OrderPage({ params }) {
   const { id } = await params;
   const order = await getOrder(id);
