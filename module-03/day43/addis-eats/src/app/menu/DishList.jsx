@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { FiPlus } from "react-icons/fi";
 import AddToCartButton from "./AddToCartButton";
 import { useRouter } from "next/navigation";
 import SearchBox from "./components/SearchBox";
+import Image from "next/image";
 // import { useCartStore } from "../../store/cartStore";
 
 function DishList({ dishes }) {
@@ -24,10 +24,12 @@ function DishList({ dishes }) {
           onClick={() => router.push(`/menu/${data.id}`)}
         >
           <div className="group flex flex-col gap-4 cursor-pointer  overflow-hidden rounded-[var(--radius-md)] bg-[var(--white)] transition-[transform,box-shadow] duration-200 ease-in-out hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(122,31,31,0.12)]">
-            <img
-              src={data.image || "/doro.png"}
+            <Image
+              src={'/doro.png'}
               alt={data.nameEn}
-              className="transition-transform duration-300 ease-in-out group-hover:scale-105"
+              width={400}
+              height={300}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             />
           </div>
 
