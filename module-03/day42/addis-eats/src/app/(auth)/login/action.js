@@ -1,21 +1,16 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { z } from "zod";
 import { findUserByEmail } from "@/db";
-import { cookies } from "next/headers";
-import { getSession } from "@/lib/session";
+import { createSession } from "@/lib/session";
+
 const loginSchema = z.object({
-    email: z.email("Invalid Email"),
+    email: z.email("Invalid email"),
     password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export async function loginAction(prevState, formData) {
-    const cookieStore = await cookies();
-    const session = {
-        userId: user.id,
-    };
-
-
     const result = loginSchema.safeParse({
         email: formData.get("email"),
         password: formData.get("password"),
@@ -35,22 +30,19 @@ export async function loginAction(prevState, formData) {
 
     if (!user || user.password !== result.data.password) {
         return {
-            errors: {
-                login: "Invalid email or password",
-            },
+            errors: { login: "Invalid email or password" },
         };
     }
 
+    const cookieStore = await cookies();
 
-
-    cookieStore.set("session", JSON.stringify(session), {
+    cookieStore.set("session", user.id, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 7,
         path: "/",
     });
-
     return {
         errors: {},
         user: {

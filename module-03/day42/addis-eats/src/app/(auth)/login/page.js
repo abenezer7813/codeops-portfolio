@@ -20,11 +20,15 @@ function Login() {
         if (state.user) {
             setUser(state.user);
 
-            const redirectTo = searchParams.get("from") || "/menu";
+            const next = searchParams.get("next");
 
-            router.replace(redirectTo);
+            const safeNext =
+                next?.startsWith("/") && !next.startsWith("//")
+                    ? next
+                    : "/menu";
+
+            router.replace(safeNext);
         }
-
     }, [state.user, setUser, router, searchParams]);
 
 
@@ -61,10 +65,10 @@ function Login() {
                             type="email"
                             id="email"
                             name="email"
-                            
+
                             placeholder="example@gmail.com"
                             className="ml-5 w-[90%] border-0 bg-transparent outline-none"
-                            
+
                         />
                     </div>
 
@@ -81,10 +85,10 @@ function Login() {
                             type="password"
                             id="pass"
                             name="password"
-    
+
                             placeholder="*******"
                             className="ml-5 w-[90%] border-0 bg-transparent outline-none"
-                            
+
                         />
 
                         <FiEye size={20} className="inline" />
