@@ -1,8 +1,8 @@
-import { getDishes } from "@/db";
+import { db } from "@/db";
 
 export default async function sitemap() {
   const baseUrl = "https://your-real-domain.com";
-  const dishes = await getDishes();
+  const dishes = await db.dish.findMany();
 
   const staticRoutes = [
     "",
