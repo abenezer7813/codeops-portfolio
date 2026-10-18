@@ -6,6 +6,5 @@ export const orderSchema = z.object({
     subCity: z.string().min(1, 'SubCity can not be empty'),
     street: z.string().min(1, 'Street can not be empty'),
     landmark: z.string().min(1, 'Landmark can not be empty'),
-    deliveryTime: z.string(),
-    paymentMethod: z.enum(['telebirr', 'cbe', 'cod', 'amole']),
+    
   })

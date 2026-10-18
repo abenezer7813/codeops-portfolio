@@ -1,6 +1,5 @@
-"use client"
-import React, { useState } from 'react'
-import CategoryBar from '../CategoryBar'
+import React from 'react'
+import CategoryBar from './components/CategoryBar'
 
 export default function MenuLayout({children}) {
     

@@ -1,16 +1,19 @@
-import error from "@/app/menu/error";
-import { createOrder } from "@/db";
-import { orderSchema } from "@/schema";
-export async function POST(request) {
-    const body=await request.json()
-    console.log(body);
-    const result =orderSchema.safeParse(body.result.data)
-    if(!result.success) {return Response.json(
-        {fieldErrors:result.error.flatten().fieldErrors},
-        {status:422})}
-        
-    
+import { createOrder } from "@/lib/db";
+import { orderSchema } from "@/lib/schema";
 
- const order=await createOrder(result.data)
- return Response.json({order},{status:201})
+export async function POST(request) {
+  const body = await request.json();
+
+  const result = orderSchema.safeParse(body);
+
+  if (!result.success) {
+    return Response.json(
+      { fieldErrors: result.error.flatten().fieldErrors },
+      { status: 422 }
+    );
+  }
+
+  const order = await createOrder(result.data);
+
+  return Response.json({ order }, { status: 201 });
 }

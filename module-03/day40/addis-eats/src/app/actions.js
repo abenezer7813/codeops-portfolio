@@ -1,7 +1,7 @@
 "use server"
 
-import { createOrder } from "@/db"
-import { orderSchema } from "@/schema"
+import { createOrder } from "@/lib/db"
+import { orderSchema } from "@/lib/schema"
 import { revalidatePath } from "next/cache";
 
 export async function placeOrder(data) {

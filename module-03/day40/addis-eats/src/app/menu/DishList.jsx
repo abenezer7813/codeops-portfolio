@@ -2,7 +2,7 @@
 
 import React from "react";
 import { FiPlus } from "react-icons/fi";
-import AddToCartButton from "./AddToCartButton";
+import AddToCartButton from "./components/AddToCartButton";
 import { useRouter } from "next/navigation";
 // import { useCartStore } from "../../store/cartStore";
 

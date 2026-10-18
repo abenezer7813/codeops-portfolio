@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useCartStore } from '@/store/cartStore'
 import { orderSchema } from '@/schema'
@@ -16,13 +16,14 @@ const paymentMethods = [
 ]
 
 export default function Checkout() {
-  const user = {'name':'ab','email':'ab@gmail.com'}
+  const user = { 'name': 'ab', 'email': 'ab@gmail.com' }
   const clearCart = useCartStore((s) => s.clearCart)
   const cart = useCartStore((s) => s.items)
   const cartTotal = useCartStore((s) =>
     s.items.reduce((total, i) => total + i.priceETB * i.quantity, 0)
   )
-
+  const items = useCartStore((state) => state.items);
+  
   const router = useRouter()
 
   const [form, setForm] = useState({
@@ -36,11 +37,16 @@ export default function Checkout() {
     paymentMethod: 'telebirr',
   })
 
-  
+
   const [errors, setErrors] = useState({})
 
-  const [state,formAction,pending]=useActionState(placeOrder,null)
+  const [state, formAction, pending] = useActionState(placeOrder, null)
 
+  useEffect(() => {
+    if (state?.status === 201) {
+      clearCart();
+    }
+  }, [state, clearCart]);
   function handleChange(e) {
     const { name, value } = e.target
     setForm({ ...form, [name]: value })
@@ -50,7 +56,7 @@ export default function Checkout() {
   const expressFee = 150
   const grandTotal = subtotal + expressFee
 
-async  function handleConfirm(e) {
+  async function handleConfirm(e) {
     e.preventDefault()
 
     const validationErrors = {}
@@ -75,12 +81,12 @@ async  function handleConfirm(e) {
       grandTotal,
     }
     //using api 
-    const postResult=await fetch('/api/orders',
+    const postResult = await fetch('/api/orders',
       {
-        method:'POST',
-        body:JSON.stringify(order),
-        headers:{
-         "content-type":"application/json"
+        method: 'POST',
+        body: JSON.stringify(order),
+        headers: {
+          "content-type": "application/json"
         }
       }
     )
@@ -101,9 +107,9 @@ async  function handleConfirm(e) {
       </div>
 
       <form
-      action={formAction}
+        action={formAction}
         className="grid grid-cols-1 items-start gap-6 md:grid-cols-[2fr_1fr]"
-       // onSubmit={handleConfirm}
+      // onSubmit={handleConfirm}
       >
         <div>
           <section className="mb-5 rounded-xl border border-[#f0e0d0] bg-white p-5">
@@ -260,11 +266,10 @@ async  function handleConfirm(e) {
             <div className="mt-2 flex gap-3">
               <button
                 type="button"
-                className={`flex-1 rounded-lg border p-2.5 text-left text-[13px] ${
-                  form.deliveryTime === 'immediate'
-                    ? 'border-[#7a1f1f] bg-[#fdf0ea] text-[#7a1f1f]'
-                    : 'border-[#ddd] bg-white'
-                }`}
+                className={`flex-1 rounded-lg border p-2.5 text-left text-[13px] ${form.deliveryTime === 'immediate'
+                  ? 'border-[#7a1f1f] bg-[#fdf0ea] text-[#7a1f1f]'
+                  : 'border-[#ddd] bg-white'
+                  }`}
                 onClick={() =>
                   setForm({ ...form, deliveryTime: 'immediate' })
                 }
@@ -274,11 +279,10 @@ async  function handleConfirm(e) {
 
               <button
                 type="button"
-                className={`flex-1 rounded-lg border p-2.5 text-left text-[13px] ${
-                  form.deliveryTime === 'scheduled'
-                    ? 'border-[#7a1f1f] bg-[#fdf0ea] text-[#7a1f1f]'
-                    : 'border-[#ddd] bg-white'
-                }`}
+                className={`flex-1 rounded-lg border p-2.5 text-left text-[13px] ${form.deliveryTime === 'scheduled'
+                  ? 'border-[#7a1f1f] bg-[#fdf0ea] text-[#7a1f1f]'
+                  : 'border-[#ddd] bg-white'
+                  }`}
                 onClick={() =>
                   setForm({ ...form, deliveryTime: 'scheduled' })
                 }
@@ -298,11 +302,10 @@ async  function handleConfirm(e) {
                 <button
                   type="button"
                   key={method.id}
-                  className={`rounded-lg border p-3 text-left text-sm ${
-                    form.paymentMethod === method.id
-                      ? 'border-[#7a1f1f] bg-[#fdf0ea]'
-                      : 'border-[#ddd] bg-white'
-                  }`}
+                  className={`rounded-lg border p-3 text-left text-sm ${form.paymentMethod === method.id
+                    ? 'border-[#7a1f1f] bg-[#fdf0ea]'
+                    : 'border-[#ddd] bg-white'
+                    }`}
                   onClick={() =>
                     setForm({ ...form, paymentMethod: method.id })
                   }
@@ -353,11 +356,11 @@ async  function handleConfirm(e) {
           </div>
 
           <button
-          disabled={pending}
+            disabled={pending}
             type="submit"
             className="mt-4 w-full rounded-lg border-0 bg-[#7a1f1f] p-3.5 font-semibold text-white hover:bg-[#611818]"
           >
-           { pending?"Sending":`Confirm Order & Pay ETB ${grandTotal} →`}
+            {pending ? "Sending" : `Confirm Order & Pay ETB ${grandTotal} →`}
           </button>
         </aside>
       </form>

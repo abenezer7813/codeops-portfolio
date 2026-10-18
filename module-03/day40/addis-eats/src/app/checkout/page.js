@@ -3,7 +3,7 @@
 import { useActionState, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useCartStore } from '@/store/cartStore'
-import { orderSchema } from '@/schema'
+import { orderSchema } from '@/lib/schema'
 import { placeOrder } from '../actions'
 
 
