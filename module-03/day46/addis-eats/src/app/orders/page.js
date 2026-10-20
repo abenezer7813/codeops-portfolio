@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import OrdersSummary from "./OrderSummary";
 import RevenueChart from "./RevenueChart";
+import OrdersPerDayChart from "./OrdersPerdayChart";
 
 
 export const metadata = {
@@ -30,13 +31,21 @@ export default async function Page() {
 
 
 
-
+const ordersPerDay = [
+  { date: "Oct 14", orders: 12 },
+  { date: "Oct 15", orders: 18 },
+  { date: "Oct 16", orders: 10 },
+  { date: "Oct 17", orders: 22 },
+  { date: "Oct 18", orders: 15 },
+  { date: "Oct 19", orders: 25 },
+  { date: "Oct 20", orders: 20 },
+];
 
   return (
   <div>
     <div><OrdersSummary summary={summary} /></div>
     <div className="h-300 w-100"><RevenueChart data={revenueData} />;</div>
-    
+    <div className="h-300" w-300><OrdersPerDayChart data={ordersPerDay}/></div>
   </div>
   );
 }
