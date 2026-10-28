@@ -1,6 +1,6 @@
 "use server";
 
-import { z } from "zod";
+import { success, z } from "zod";
 import { createUser } from "@/db";
 import { redirect } from "next/navigation";
 
@@ -9,20 +9,16 @@ const registerSchema = z
         name: z.string().min(1, "Name cannot be empty").min(2, "Name too short"),
         email: z.email("Invalid email"),
         password: z.string().min(6, "Password must be at least 6 characters"),
-        confirmPassword: z.string().min(1, "Please confirm your password"),
     })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords do not match",
-        path: ["confirmPassword"],
-    });
+    
 
-export async function registerAction(prevState, formData) {
+export async function registerAction(formData) {
     console.log(formData);
     const data = {
-        name: formData.get("name"),
-        email: formData.get("email"),
-        password: formData.get("password"),
-        confirmPassword: formData.get("confirmPassword"),
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+    
     };
     console.log(data);
 
@@ -44,6 +40,14 @@ export async function registerAction(prevState, formData) {
             email: result.data.email,
             password: result.data.password,
         });
+        return {
+            success: true,
+            user: {
+                name: result.data.name,
+                email: result.data.email,
+                password: result.data.password,
+            }
+        }
     } catch (error) {
         return {
             errors: {

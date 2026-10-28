@@ -1,9 +1,10 @@
 "use client";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiArrowRight, FiEye, FiLock, FiMail, FiSmartphone } from "react-icons/fi";
 import { useAuthStore } from "@/store/authStore";
-import { loginAction } from "./action";
+import { createCookies, loginAction } from "./action";
+import { login } from "@/services/authService";
 
 function Login() {
 
@@ -15,6 +16,11 @@ function Login() {
     const setUser = useAuthStore((s) => s.setUser);
     const router = useRouter();
     const searchParams = useSearchParams();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+
+    })
 
     useEffect(() => {
         if (state.user) {
@@ -30,7 +36,33 @@ function Login() {
             router.replace(safeNext);
         }
     }, [state.user, setUser, router, searchParams]);
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+     console.log(formData);
+        const loginResponse = await loginAction(formData)
+        
+    if(Object.keys(loginResponse.errors).length===0){
+        console.log(loginResponse.user);
+        const user=login(loginResponse.user)
+        setUser(user)
+        await createCookies()
+          const next = searchParams.get("next");
+
+        const safeNext =
+            next?.startsWith("/") && !next.startsWith("//")
+                ? next
+                : "/menu";
+
+        router.replace(safeNext);
+    }
+    }
 
     return (
         <div className="mx-auto my-[10px] flex w-1/2 flex-col gap-[10px] rounded-[var(--radius-md)] bg-[var(--surface)] p-10">
@@ -41,7 +73,7 @@ function Login() {
                 dining mesobs
             </p>
 
-            <form action={formAction}>
+            <form onSubmit={(e)=>handleSubmit(e)}>
                 <div className="inline-flex flex-row gap-5 rounded-[var(--radius-md)] bg-[var(--background-warm)] p-[5px]">
                     <div className="rounded-[var(--radius-md)] bg-[var(--surface)] p-[10px] font-bold text-[var(--primary-dark)]">
                         <FiMail className="inline" /> Email Address
@@ -65,7 +97,7 @@ function Login() {
                             type="email"
                             id="email"
                             name="email"
-
+                            onChange={(e) => handleChange(e)}
                             placeholder="example@gmail.com"
                             className="ml-5 w-[90%] border-0 bg-transparent outline-none"
 
@@ -85,7 +117,7 @@ function Login() {
                             type="password"
                             id="pass"
                             name="password"
-
+                            onChange={(e) => handleChange(e)}
                             placeholder="*******"
                             className="ml-5 w-[90%] border-0 bg-transparent outline-none"
 

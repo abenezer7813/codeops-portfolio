@@ -11,10 +11,10 @@ import { registerAction } from "./action";
 
 
 function SigninPage() {
-    const [state, formAction, pending] = useActionState(
-    registerAction,
-    { errors: {} }
-);
+        const [state, formAction, pending] = useActionState(
+        registerAction,
+        { errors: {} }
+    );
     const registerSchema = z
         .object({
             name: z
@@ -45,7 +45,7 @@ function SigninPage() {
 
     const [errors, setErrors] = useState({});
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
         const result = registerSchema.safeParse(form);
@@ -59,11 +59,14 @@ function SigninPage() {
 
         if (Object.keys(validationErrors).length === 0) {
             try {
-                registerUser({
+                const serverResponse = await registerAction({
                     name: result.data.name,
                     email: result.data.email,
                     password: result.data.password,
-                });
+                })
+                if (serverResponse.success) {
+                    registerUser(serverResponse.user);
+                }
 
                 setErrors({});
                 router.push("/login");
@@ -82,7 +85,7 @@ function SigninPage() {
                 <p>Join our culinary circle in less than a minute</p>
             </div>
 
-            <form action={formAction} className="flex flex-col">
+            <form onSubmit={(e)=>handleSubmit(e)} className="flex flex-col">
                 <div>
                     <label htmlFor="name" className="text-black">
                         Full Name
@@ -104,7 +107,7 @@ function SigninPage() {
                     </div>
                 </div>
 
-                <p className="text-red-600">{state.errors?.name}</p>
+                <p className="text-red-600">{errors?.name}</p>
 
                 <div>
                     <label htmlFor="email" className="text-black">
@@ -127,7 +130,7 @@ function SigninPage() {
                     </div>
                 </div>
 
-                <p className="text-red-600">{state.errors?.email}</p>
+                <p className="text-red-600">{errors?.email}</p>
 
                 <div className="flex justify-between gap-5">
                     <div className="w-full">
@@ -153,7 +156,7 @@ function SigninPage() {
                             <FiEye />
                         </div>
 
-                        <p className="text-red-600">{state.errors?.password}</p>
+                        <p className="text-red-600">{errors?.password}</p>
                     </div>
 
                     <div className="w-full">
@@ -180,18 +183,18 @@ function SigninPage() {
                         </div>
 
                         <p className="text-red-600">
-                            {state.errors?.confirmPassword}
+                            {errors?.confirmPassword}
                         </p>
                     </div>
                 </div>
 
                 <div className="my-[30px] flex w-[90%] justify-center rounded-[var(--radius-md)] bg-[var(--brown)] px-[30px] py-[10px] shadow-[var(--shadow-md)] hover:bg-[var(--primary-dark)]">
                     <button
-                       disabled={pending}
+                        disabled={pending}
                         type="submit"
                         className="cursor-pointer border-0 bg-transparent text-[var(--surface)]"
                     >
-                         {pending ? "Creating Account..." : "Create Account"} <FiArrowRight />
+                        {pending ? "Creating Account..." : "Create Account"} <FiArrowRight />
                     </button>
                 </div>
             </form>

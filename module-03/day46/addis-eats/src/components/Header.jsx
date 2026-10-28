@@ -5,6 +5,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { logoutAction } from "@/app/(auth)/login/action";
 
 function Header() {
   const logout = useAuthStore((s) => s.logout);
@@ -24,6 +25,7 @@ function Header() {
   const router = useRouter();
 
   function handleLogout() {
+    logoutAction()
     logout();
     router.push("/login");
   }
