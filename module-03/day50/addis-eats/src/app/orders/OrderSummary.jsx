@@ -1,16 +1,34 @@
 "use client";
 
 export default function OrdersSummary({ summary }) {
-  if (summary.totalOrders === 0) {
-    return <p>No orders yet.</p>;
-  }
+  const items = [
+    { label: "Total Orders", value: summary.totalOrders },
+    { label: "Pending Orders", value: summary.pendingOrders },
+    { label: "Completed Orders", value: summary.completedOrders },
+  ];
 
   return (
-    <div>
-      <h1>Orders Summary</h1>
-      <p>Total Orders: {summary.totalOrders}</p>
-      <p>Pending Orders: {summary.pendingOrders}</p>
-      <p>Completed Orders: {summary.completedOrders}</p>
-    </div>
+    <section>
+      <h1 className="mb-4 text-2xl font-bold text-(--primary-dark)">
+        Orders Dashboard
+      </h1>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {items.map((item) => (
+          <div
+            key={item.label}
+            className="rounded-xl border border-(--border) bg-(--white) p-5"
+          >
+            <p className="text-sm text-(--text)">
+              {item.label}
+            </p>
+
+            <p className="mt-2 text-3xl font-bold text-(--primary-dark)">
+              {item.value}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

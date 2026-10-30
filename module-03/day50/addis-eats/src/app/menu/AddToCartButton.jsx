@@ -8,10 +8,11 @@ function AddToCartButton({data}) {
      const addItem=useCartStore((s)=>s.addItem)
   return (
      <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
              addItem(data, 1);
           }}
-          className="cursor-pointer rounded-[var(--radius-md)] border-0 bg-[var(--bron)] px-[15px] py-0 text-[color:var(--white)] transition-[transform,background-color] duration-200 hover:bg-[var(--primary-dark)] active:translate-y-0.5"
+          className="cursor-pointer rounded-[var(--radius-md)] border-0 bg-[var(--brown)] px-[15px] py-0 text-[color:var(--white)] transition-[transform,background-color] duration-200 hover:bg-[var(--primary-dark)] active:translate-y-0.5"
         >
           <FiPlus /> Add
         </button>

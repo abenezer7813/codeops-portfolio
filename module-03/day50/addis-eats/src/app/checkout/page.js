@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useCartStore } from '@/store/cartStore'
 import { orderSchema } from '@/schema'
 import { placeOrder } from '../actions'
-
+import Link from 'next/link'
 
 
 const paymentMethods = [
@@ -23,7 +23,7 @@ export default function Checkout() {
     s.items.reduce((total, i) => total + i.priceETB * i.quantity, 0)
   )
   const items = useCartStore((state) => state.items);
-  
+
   const router = useRouter()
 
   const [form, setForm] = useState({
@@ -44,6 +44,7 @@ export default function Checkout() {
 
   useEffect(() => {
     if (state?.status === 201) {
+       alert("Order placed successfully!");
       clearCart();
     }
   }, [state, clearCart]);
@@ -54,7 +55,7 @@ export default function Checkout() {
 
   const subtotal = cartTotal
   const expressFee = 150
-  const grandTotal = subtotal + expressFee
+  const total = subtotal + expressFee
 
   async function handleConfirm(e) {
     e.preventDefault()
@@ -90,12 +91,32 @@ export default function Checkout() {
         }
       }
     )
-    console.log(postResult);
+  
     clearCart()
     sessionStorage.setItem('order', JSON.stringify(order))
     //router.push('/order-confirmation')
   }
 
+  if (cart.length === 0) {
+    return (
+      <div className="flex min-h-[70vh] flex-col items-center justify-center bg-[#fdf6f0] px-6 text-center">
+        <h1 className="mb-3 text-2xl font-bold text-[#7a1f1f]">
+          Your Cart is Empty
+        </h1>
+
+        <p className="mb-6 text-sm text-gray-600">
+          You need to add some delicious food before proceeding to checkout.
+        </p>
+
+        <Link
+          href="/menu"
+          className="rounded-lg bg-[#7a1f1f] px-6 py-3 font-semibold text-white no-underline hover:bg-[#611818]"
+        >
+          Go to Menu
+        </Link>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-[#fdf6f0] px-6 py-6 md:px-12">
       <div className="mb-6 flex justify-center gap-6 text-[13px]">
@@ -111,6 +132,7 @@ export default function Checkout() {
         className="grid grid-cols-1 items-start gap-6 md:grid-cols-[2fr_1fr]"
       // onSubmit={handleConfirm}
       >
+        <input type="hidden" name="total" value={total} />
         <div>
           <section className="mb-5 rounded-xl border border-[#f0e0d0] bg-white p-5">
             <h2 className="mb-4 text-[15px] text-[#7a1f1f]">
@@ -159,9 +181,9 @@ export default function Checkout() {
                     className="min-w-0 flex-1 border-0 px-2.5 py-2 text-sm outline-none"
                   />
                 </div>
-                {errors.phone && (
-                  <p className="mt-1 text-xs text-[#c0392b]">
-                    {errors.phone}
+                {state?.errors?.phone && (
+                  <p className="text-xs text-red-600">
+                    {state.errors.phone[0]}
                   </p>
                 )}
               </div>
@@ -182,14 +204,18 @@ export default function Checkout() {
                 onChange={handleChange}
                 className="rounded-md border border-[#ddd] px-2.5 py-2 text-sm"
               />
-              {errors.email && (
-                <p className="mt-1 text-xs text-[#c0392b]">
-                  {errors.email}
+              {state?.errors?.email && (
+                <p className="text-xs text-red-600">
+                  {state.errors.email[0]}
                 </p>
               )}
             </div>
           </section>
-
+          <input
+            type="hidden"
+            name="items"
+            value={JSON.stringify(cart)}
+          />
           <section className="mb-5 rounded-xl border border-[#f0e0d0] bg-white p-5">
             <h2 className="mb-4 text-[15px] text-[#7a1f1f]">
               2. Delivery Location in Addis Ababa
@@ -211,9 +237,9 @@ export default function Checkout() {
                   placeholder="Bole Medhanialem / Kazanchis"
                   className="rounded-md border border-[#ddd] px-2.5 py-2 text-sm"
                 />
-                {errors.subCity && (
-                  <p className="mt-1 text-xs text-[#c0392b]">
-                    {errors.subCity}
+                {state?.errors?.subCity && (
+                  <p className="text-xs text-red-600">
+                    {state.errors.subCity[0]}
                   </p>
                 )}
               </div>
@@ -233,9 +259,9 @@ export default function Checkout() {
                   placeholder="Bentui Edna Mall, House No. 402, 3rd Floor"
                   className="rounded-md border border-[#ddd] px-2.5 py-2 text-sm"
                 />
-                {errors.street && (
-                  <p className="mt-1 text-xs text-[#c0392b]">
-                    {errors.street}
+                {state?.errors?.street && (
+                  <p className="text-xs text-red-600">
+                    {state.errors.street[0]}
                   </p>
                 )}
               </div>
@@ -256,11 +282,11 @@ export default function Checkout() {
                 placeholder="Opposite Boston Day Spa, entrance through dark green gate"
                 className="rounded-md border border-[#ddd] px-2.5 py-2 text-sm"
               />
-              {errors.landmark && (
-                <p className="mt-1 text-xs text-[#c0392b]">
-                  {errors.landmark}
-                </p>
-              )}
+             {state?.errors?.landmark && (
+                  <p className="text-xs text-red-600">
+                    {state.errors.landmark[0]}
+                  </p>
+                )}
             </div>
 
             <div className="mt-2 flex gap-3">
@@ -352,7 +378,7 @@ export default function Checkout() {
 
           <div className="mt-2 flex justify-between border-t border-[#eee] pt-3 text-lg font-bold text-[#7a1f1f]">
             <span>Grand Total</span>
-            <span>ETB {grandTotal}</span>
+            <span>ETB {total}</span>
           </div>
 
           <button
@@ -360,7 +386,7 @@ export default function Checkout() {
             type="submit"
             className="mt-4 w-full rounded-lg border-0 bg-[#7a1f1f] p-3.5 font-semibold text-white hover:bg-[#611818]"
           >
-            {pending ? "Sending" : `Confirm Order & Pay ETB ${grandTotal} →`}
+            {pending ? "Sending" : `Confirm Order & Pay ETB ${total} →`}
           </button>
         </aside>
       </form>

@@ -65,7 +65,9 @@ function Login() {
     }
 
     return (
-        <div className="mx-auto my-[10px] flex w-1/2 flex-col gap-[10px] rounded-[var(--radius-md)] bg-[var(--surface)] p-10">
+        <div className="flex min-h-screen items-center justify-center bg-[var(--background)] p-4">
+    <div className="my-[10px] flex w-full max-w-xl flex-col gap-[10px] rounded-[var(--radius-md)] justify bg-[var(--surface)] p-10 shadow-[var(--shadow-md)]">
+
             <h1>Welcome TO Mesob Table</h1>
 
             <p>
@@ -161,11 +163,12 @@ function Login() {
 
                 <p
                     className="cursor-pointer font-bold text-[var(--brown)] hover:text-[var(--primary-dark)]"
-                    onClick={() => router.push("/register")}
+                    onClick={() => router.push("/signup")}
                 >
                     Join the Mesob Table & Register
                 </p>
             </div>
+        </div>
         </div>
     );
 }

@@ -79,7 +79,9 @@ function SigninPage() {
     }
 
     return (
-        <div className="mx-auto my-[10px] flex w-1/2 flex-col gap-[10px] rounded-[var(--radius-md)] bg-[var(--surface)] p-10 shadow-[0_18px_45px_rgba(80,40,30,0.20)]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--background)] p-[10px]">
+    <div className="my-[10px] flex w-full max-w-xl flex-col gap-[10px] rounded-[var(--radius-md)] justify bg-[var(--surface)] p-[10px] shadow-[var(--shadow-md)]">
+
             <div>
                 <h1>Create Your Mesob House Account</h1>
                 <p>Join our culinary circle in less than a minute</p>
@@ -211,6 +213,7 @@ function SigninPage() {
                     Sign in here
                 </p>
             </div>
+        </div>
         </div>
     );
 }

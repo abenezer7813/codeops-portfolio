@@ -91,7 +91,9 @@ export default function OrdersTable({
                     : "—"}
                 </td>
                 <td className="p-3 text-right">
+                 { console.log(orders)}
                   {new Intl.NumberFormat("en-ET", {
+                  
                     maximumFractionDigits: 2,
                   }).format(Number(order.total))}
                 </td>

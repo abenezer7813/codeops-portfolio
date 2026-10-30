@@ -1,7 +1,7 @@
 import { db } from "@/db";
 
 export default async function sitemap() {
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = "https://codeops-portfolio-pi.vercel.app/";
   const dishes = await db.dish.findMany();
 
   const staticRoutes = [

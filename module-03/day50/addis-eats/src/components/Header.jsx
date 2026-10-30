@@ -33,10 +33,9 @@ function Header() {
   }
 
   const navLinkClass = (href) =>
-    `rounded-md px-3 py-2 no-underline transition-colors ${
-      pathname === href
-        ? "bg-(--primary-dark) text-(--white) font-semibold"
-        : "text-(--text) hover:bg-(--background) hover:text-(--primary-dark)"
+    `rounded-md px-4 py-4 no-underline transition-colors ${pathname === href
+      ? "bg-(--brown) text-(--primary-dark)"
+      : "text-(--text) hover:bg-(--background) hover:text-(--primary-dark)"
     }`;
 
   return (
@@ -49,49 +48,55 @@ function Header() {
       </Link>
 
       <div className="flex items-center gap-3">
-        {user && (
-          <nav className="flex items-center gap-2 max-md:flex-wrap">
-            <Link href="/menu" className={navLinkClass("/menu")}>
-              Menu
-            </Link>
+        <nav className="flex items-center gap-2 max-md:flex-wrap">
+          <Link href="/menu" className={navLinkClass("/menu")}>
+            Menu
+          </Link>
 
-            <Link href="/cart" className={navLinkClass("/cart")}>
-              Order & Cart
-            </Link>
+          <Link href="/cart" className={navLinkClass("/cart")}>
+            Cart
+          </Link>
 
-            <Link href="/checkout" className={navLinkClass("/checkout")}>
-              Delivery & Checkout
-            </Link>
+          <div className="flex flex-col rounded-md bg-(--background) px-6 py-2">
+            <span>{cartCount} Items</span>
+            <span className="font-bold text-(--gold)">
+              {cartTotal} ETB
+            </span>
+          </div>
 
-            <div className="flex flex-col rounded-md bg-(--background) px-6 py-2">
-              <span>{cartCount} Items</span>
-              <span className="font-bold text-(--gold)">
-                {cartTotal} ETB
-              </span>
-            </div>
+          {user && (
+            <>
+              <Link href="/checkout" className={navLinkClass("/checkout")}>
+                Delivery & Checkout
+              </Link>
 
-            <span>Hi, {user.name}</span>
+              <Link href="/orders" className={navLinkClass("/orders")}>
+                Orders
+              </Link>
 
-            <button
-              className="cursor-pointer border-0 bg-transparent px-3 py-2 text-(--primary-dark)"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </nav>
-        )}
+              <span>Hi, {user.name}</span>
 
-        {!user && (
-          <nav className="flex items-center gap-2">
-            <Link href="/login" className={navLinkClass("/login")}>
-              Sign In
-            </Link>
+              <button
+                className="cursor-pointer border-0 bg-transparent px-3 py-2 text-(--primary-dark)"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          )}
 
-            <Link href="/signup" className={navLinkClass("/signup")}>
-              Register
-            </Link>
-          </nav>
-        )}
+          {!user && (
+            <>
+              <Link href="/login" className={navLinkClass("/login")}>
+                Sign In
+              </Link>
+
+              <Link href="/signup" className={navLinkClass("/signup")}>
+                Register
+              </Link>
+            </>
+          )}
+        </nav>
       </div>
     </header>
   );

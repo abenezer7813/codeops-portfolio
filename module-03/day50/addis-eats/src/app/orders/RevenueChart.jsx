@@ -15,28 +15,34 @@ export default function RevenueChart({ data }) {
     `${new Intl.NumberFormat("en-ET").format(value)} ETB`;
 
   return (
-    <div style={{ width: "100%", height: 300 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
+    <div className="w-full min-w-0 rounded-xl border border-(--border) bg-(--white) p-5">
+      <h2 className="mb-4 text-lg font-semibold">
+        Revenue Overview
+      </h2>
 
-          <XAxis dataKey="date" />
+      <div className="h-[300px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
 
-          <YAxis
-            tickFormatter={(value) =>
-              new Intl.NumberFormat("en-ET", {
-                notation: "compact",
-              }).format(value)
-            }
-          />
+            <XAxis dataKey="date" />
 
-          <Tooltip
-            formatter={(value) => [formatETB(value), "Revenue"]}
-          />
+            <YAxis
+              tickFormatter={(value) =>
+                new Intl.NumberFormat("en-ET", {
+                  notation: "compact",
+                }).format(value)
+              }
+            />
 
-          <Bar dataKey="revenue" fill="#7a1f1f" />
-        </BarChart>
-      </ResponsiveContainer>
+            <Tooltip
+              formatter={(value) => [formatETB(value), "Revenue"]}
+            />
+
+            <Bar dataKey="revenue" fill="#7a1f1f" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-
 import { db } from "@/db";
 import OrdersSummary from "./OrderSummary";
 import RevenueChart from "./RevenueChart";
@@ -32,7 +31,7 @@ export default async function Page({ searchParams }) {
     : "createdAt";
 
   const direction = params.direction === "asc" ? "asc" : "desc";
-
+console.log(orders);
   const sortedOrders = [...orders].sort((a, b) => {
     const first = a[sort];
     const second = b[sort];
@@ -46,7 +45,7 @@ export default async function Page({ searchParams }) {
 
     return direction === "asc" ? result : -result;
   });
-
+console.log(sortedOrders);
   const pageSize = 5;
   const requestedPage = Number(params.page);
   const validPage =
@@ -66,6 +65,7 @@ export default async function Page({ searchParams }) {
     page * pageSize
   );
 
+  console.log(paginatedOrders);
   const revenueData = [
     { date: "Mon", revenue: 2500 },
     { date: "Tue", revenue: 1800 },
@@ -85,7 +85,9 @@ export default async function Page({ searchParams }) {
   ];
 
   return (
-    <div className="grid gap-6">
+   
+  <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="space-y-8">
       <OrdersSummary summary={summary} />
 
       <OrdersTable
@@ -96,11 +98,18 @@ export default async function Page({ searchParams }) {
         totalPages={totalPages}
       />
 
-      <div className="h-[400px] w-full">
-        <RevenueChart data={revenueData} />
-      </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+         <div className="min-w-0">
+          <OrdersPerDayChart data={ordersPerDay} />
+        </div>
+        <div className="min-w-0">
+          <RevenueChart data={revenueData} />
+        </div>
 
-      <OrdersPerDayChart data={ordersPerDay} />
+       
+      </div>
     </div>
+  </main>
+
   );
 }
