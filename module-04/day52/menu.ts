@@ -19,6 +19,8 @@ export function formatEtb(santim: number): string {
     style: "currency",
     currency: "ETB",
   }).format(santim / 100);
+
+  
 }
 
 export function dishesUnder(dishes: Dish[], maxSantim: number): Dish[] {
