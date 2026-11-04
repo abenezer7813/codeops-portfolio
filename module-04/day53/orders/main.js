@@ -7,6 +7,7 @@ try {
     service.find(999);
 }
 catch (err) {
+    333;
     if (err instanceof _1.OrderNotFoundError)
         console.error(`404 -> ${err.orderId}`);
     else
