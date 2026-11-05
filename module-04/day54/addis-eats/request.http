@@ -1,0 +1,56 @@
+@base = http://localhost:4000/api
+
+### 1. All orders (should return 12)
+GET {{base}}/orders
+
+### 2. Filter by area (should return 4 Bole orders)
+GET {{base}}/orders?area=Bole
+
+### 3. One order
+GET {{base}}/orders/1
+
+### 4. Missing order (500 for now, 404 comes on Day 58)
+GET {{base}}/orders/999
+
+### 5. Valid POST (should return 201 with id 13)
+POST {{base}}/orders
+Content-Type: application/json
+
+{
+  "customer": "Test User",
+  "area": "Bole",
+  "totalSantim": 25000,
+  "phone": "0911234567"
+}
+
+### 6. Invalid POST: negative total (should return 400, not 500)
+POST {{base}}/orders
+Content-Type: application/json
+
+{
+  "customer": "Test User",
+  "area": "Bole",
+  "totalSantim": -5
+}
+
+### 7. Extra field gets stripped (isAdmin must not appear in the response)
+POST {{base}}/orders
+Content-Type: application/json
+
+{
+  "customer": "Test User",
+  "area": "Piassa",
+  "totalSantim": 10000,
+  "isAdmin": true
+}
+
+### 8. Bad area and phone (should return 400 with two messages)
+POST {{base}}/orders
+Content-Type: application/json
+
+{
+  "customer": "Test User",
+  "area": "London",
+  "totalSantim": 10000,
+  "phone": "12345"
+}

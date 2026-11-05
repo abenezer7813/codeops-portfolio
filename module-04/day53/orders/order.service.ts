@@ -1,5 +1,5 @@
 import { Area, Order } from "../order.types";
-import { OrderNotFoundError } from "../order.errors";
+import { OrderNotFoundError } from "../../day54/addis-eats/src/orders/order.errors";
 import { OrderRepository } from "../order.repository";
 
 export class OrderService {
