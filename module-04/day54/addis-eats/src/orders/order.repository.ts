@@ -1,4 +1,4 @@
-import { Order } from "../order.types";
+import { Order } from "../../../../day53/order.types.js";
 
 export interface OrderRepository {
   byId(id: number): Order | undefined;
@@ -20,3 +20,4 @@ export class InMemoryOrderRepository implements OrderRepository {
     return [...this.orders.values()];
   }
 }
+export const ORDER_REPOSITORY = "ORDER_REPOSITORY";

@@ -1,6 +1,6 @@
 import { Area, Order } from "./order.types";
 import { OrderRepository } from "./order.repository";
-export declare class OrderService {
+export  class OrdersService {
     private readonly repo;
     constructor(repo: OrderRepository);
     find(id: number): Order;
