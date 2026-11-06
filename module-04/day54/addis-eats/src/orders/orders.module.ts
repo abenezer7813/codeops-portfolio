@@ -4,8 +4,10 @@ import { OrdersService } from './orders.service.js';
 import { InMemoryOrderRepository } from './index.js';
 import { ORDER_REPOSITORY } from './order.repository.js';
 import { seedOrders } from './seed-orders.js';
+import { RestaurantsModule } from '../restaurants/restaurants.module.js';
 
 @Module({
+  imports: [RestaurantsModule],
   controllers: [OrdersController],
   providers: [ OrdersService,
    {
