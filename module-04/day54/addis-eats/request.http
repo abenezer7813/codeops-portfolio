@@ -54,3 +54,5 @@ Content-Type: application/json
   "totalSantim": 10000,
   "phone": "12345"
 }
+#### 9. All restaurants (should return 3)
+GET {{base}}/restaurants/1

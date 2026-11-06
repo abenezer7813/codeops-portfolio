@@ -4,10 +4,12 @@ import { OrderNotFoundError, type Area, type Order  ,} from './index.js';
 import e from 'express';
 import { ORDER_REPOSITORY,type OrderRepository } from './order.repository.js';
 import { CreateOrderDto } from './dto/create-order.dto.js';
+import { RestaurantsService } from '../restaurants/restaurants.service.js';
 @Injectable()
 export class OrdersService {
  constructor(
   @Inject(ORDER_REPOSITORY) private readonly repo: OrderRepository,
+  private readonly restaurantsService: RestaurantsService
 ) {}
 
   find(id: number): Order {
