@@ -1,126 +1,160 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Campus Events API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A REST API for discovering campus events and browsing the sessions that belong to each event. Built with **NestJS** and **TypeScript** for the CodeOps Module 4, Day 56 practical exercise.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Data is stored **in memory** (plain arrays), so it resets every time the server restarts. No database is needed.
 
-## Description
+## What it practises
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Routing and controllers (`@Controller`, `@Get`, `@Post`)
+- Request decorators: `@Param()`, `@Query()`, `@Body()`
+- Filtering, sorting and pagination
+- DTO validation with `class-validator`
+- HTTP status codes (200, 201, 400, 404)
 
-## Project setup
+## Installation and run
+
+Requirements: Node.js and npm.
 
 ```bash
-$ pnpm install
+npm install
+npm run start:dev
 ```
 
-## Compile and run the project
+The API runs at `http://localhost:3000`. Set the `PORT` environment variable to use another port. Every route starts with the global prefix `/api`.
 
-```bash
-# development
-$ pnpm run start
+## Project structure
 
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```
+src/
+  main.ts                      # app setup: global prefix /api, ValidationPipe
+  app.module.ts                # root module
+  events/
+    events.module.ts           # connects the events feature
+    events.controller.ts       # defines routes, reads request data
+    events.service.ts          # data, filtering, sorting, pagination
+    event.types.ts             # Event, Session, PaginatedEvents
+    dto/
+      create-event.dto.ts      # body validation for POST /api/events
+      find-events-query.dto.ts # query validation for GET /api/events
 ```
 
-## Run tests
+Responsibilities are kept separate: the **module** connects the feature, the **controller** defines routes and reads request data, the **service** does the finding, filtering, sorting and pagination, and the **types/DTOs** describe and validate data.
 
-```bash
-# unit tests
-$ pnpm run test
+## Data model
 
-# e2e tests
-$ pnpm run test:e2e
+**Event**: `id`, `title`, `description`, `location`, `eventDate`, `category`, `isPublished`
 
-# test coverage
-$ pnpm run test:cov
+**Session**: `id`, `eventId`, `title`, `startsAt`, `endsAt`, `room`
+
+The app starts with sample events and sessions (some events have two or more sessions).
+
+## Routes
+
+| Method | Endpoint | Behaviour |
+|---|---|---|
+| GET | `/api/events` | List events (supports query options below) |
+| GET | `/api/events/upcoming` | Events whose date is today or later |
+| GET | `/api/events/:id` | One event by ID |
+| GET | `/api/events/:id/sessions` | Sessions of that event |
+| GET | `/api/events/:id/sessions/:sessionId` | One session, only if it belongs to that event |
+| POST | `/api/events` | Create an event (validated body) |
+
+`/upcoming` is declared **before** `/:id` in the controller. Nest matches routes in declaration order, so otherwise `upcoming` would be treated as an event ID.
+
+### Query options for `GET /api/events`
+
+All are optional.
+
+| Query | Meaning | Example |
+|---|---|---|
+| `category` | Exact match, ignoring case | `?category=technology` |
+| `location` | Partial match, ignoring case | `?location=main` |
+| `isPublished` | `true` or `false` | `?isPublished=true` |
+| `sortBy` | `eventDate` or `title` | `?sortBy=eventDate` |
+| `order` | `asc` (default) or `desc` | `?order=desc` |
+| `page` | Page number, starting at 1 (default 1) | `?page=2` |
+| `limit` | Items per page (default 5) | `?limit=3` |
+
+### Response format for `GET /api/events`
+
+```json
+{
+  "items": [],
+  "total": 8,
+  "page": 2,
+  "limit": 3,
+  "totalPages": 3
+}
 ```
 
-## Deployment
+- `items`: the events on this page
+- `total`: how many events match the filters (before pagination)
+- `totalPages`: `Math.ceil(total / limit)`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Example: create an event
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```http
+POST /api/events
+Content-Type: application/json
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+{
+  "title": "Intro to Cloud Computing",
+  "description": "A beginner-friendly campus workshop.",
+  "location": "Engineering Block, Room 2",
+  "eventDate": "2026-12-04T09:00:00.000Z",
+  "category": "technology",
+  "isPublished": true
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+`title`, `description`, `location`, `eventDate` (ISO 8601) and `category` are required. `isPublished` is optional and defaults to `false`.
 
-## Observability
+## Status codes
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+| Situation | Status |
+|---|---|
+| Successful GET | 200 OK |
+| Event created | 201 Created |
+| Invalid or missing body fields, invalid query values (for example `page=0`, `sortBy=price`, `isPublished=banana`) | 400 Bad Request |
+| Event not found | 404 Not Found |
+| Session not found, or it belongs to a different event | 404 Not Found |
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+## How filtering, sorting and pagination work
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+`GET /api/events` applies three steps **in this order**, all inside `EventsService.findAll`:
 
-This project is already instrumented. To connect it, run this and approve the code it prints at [observe.nestjs.com/link](https://observe.nestjs.com/link) - signing up for free if you have no account:
+1. **Filter.** Start with all events. If `category`, `location` or `isPublished` was sent, keep only the matching events. `category` is compared in lowercase, `location` uses a lowercase `includes` check, and `isPublished` is only applied when it was sent (so `false` is a valid filter).
+2. **Sort.** If `sortBy` was sent, sort a **copy** of the filtered list (`[...result].sort(...)`) by title or by date. `order=desc` flips the direction. Sorting a copy matters: `sort` changes the array it is called on, and without filters the list is the same array as the original data, so sorting it directly would reorder the stored events for every later request.
+3. **Paginate.** Cut the sorted list into a page:
 
-```bash
-$ npx @nestjs/observe link
-```
+   ```
+   offset = (page - 1) * limit
+   items  = sortedList.slice(offset, offset + limit)
+   ```
 
-It writes the app key and secret into `.env` and makes every `nest start` script (`start`, `start:dev`, `start:debug`) load it. In production, set `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment instead.
+   `total` is the length of the list **before** slicing, and `totalPages = Math.ceil(total / limit)`.
 
-Or do it by hand: create an application and an API key at [observe.nestjs.com](https://observe.nestjs.com), and set the pair as `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment the app runs in.
+The order matters. Filtering must come first so `total` and the pages describe only matching events, and sorting must come before slicing so each page shows the right part of the sorted order.
 
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
+Query values arrive as strings, so the query DTO converts `page` and `limit` to numbers (`@Type(() => Number)`) and `isPublished` to a boolean, then validates them. Only `eventDate` and `title` are accepted for `sortBy`, and only `asc` and `desc` for `order`.
 
-## Resources
+## Test results
 
-Check out a few resources that may come in handy when working with NestJS:
+Fill in the actual status code you got for each request. Expected values are shown.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+| No. | Test | Request | Expected |
+|---|---|---|---|
+| 1 | Get all events | `GET /api/events` | 200 |
+| 2 | Filter by category | `GET /api/events?category=technology` | 200 |
+| 3 | Filter by publication status | `GET /api/events?isPublished=true` | 200 |
+| 4 | Sort and paginate | `GET /api/events?sortBy=eventDate&order=asc&page=2&limit=2` | 200 |
+| 5 | Get upcoming events | `GET /api/events/upcoming` | 200 |
+| 6 | Get an existing event | `GET /api/events/evt-101` | 200 |
+| 7 | Request a missing event | `GET /api/events/not-real` | 404 |
+| 8 | Get sessions for an event | `GET /api/events/evt-101/sessions` | 200 |
+| 9 | Get a session under its event | `GET /api/events/evt-101/sessions/ses-201` | 200 |
+| 10 | Create a valid event | `POST /api/events` | 201 |
+| 11 | Create an event with missing title | `POST /api/events` | 400 |
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+A `requests.http` file with these requests can be run with the REST Client extension in VS Code.
