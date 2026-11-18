@@ -1,4 +1,5 @@
-import { getEvents } from "../lib/api";
+import { getEvents } from "../services/eventServices";
+
 
 
 export default async function EventsPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {

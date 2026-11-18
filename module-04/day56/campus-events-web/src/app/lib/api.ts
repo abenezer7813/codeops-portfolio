@@ -1,4 +1,4 @@
-import type { PaginatedEvents } from "./types";
+import type { PaginatedEvents } from "./events";
 
 const API_URL=process.env.API_URL
 export async function getEvents(
