@@ -1,3 +1,4 @@
+import Pagination from "@/components/Pagination";
 import { getEvents } from "../services/eventServices";
 
 
@@ -102,6 +103,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                     </div>
                 ))}
             </div>
+            <Pagination page={1} totalPages={18} params={params}/>
         </div>
     );
 }
