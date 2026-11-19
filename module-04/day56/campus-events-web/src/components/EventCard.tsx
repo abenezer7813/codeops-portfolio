@@ -1,7 +1,7 @@
 import type { CampusEvent } from "@/types/event"
 import Link from "next/link"
 
-export default function EventCard(event: CampusEvent) {
+export default function EventCard({ event }: { event: CampusEvent }) {
     return (
         <div>
 

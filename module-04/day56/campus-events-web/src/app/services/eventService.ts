@@ -35,3 +35,44 @@ export async function getEventSessions(id: string): Promise<Session[]>{
   if(!res.ok) throw new Error(`Unable to get sessions ${res.status}`)
     return res.json()
 }
+export async function getEventSession(
+  eventId: string,
+  sessionId: string,
+): Promise<Session | null> {
+  const res = await fetch(
+    `${API_URL}/events/${eventId}/sessions/${sessionId}`,
+    { cache: "no-store" },
+  );
+  if (res.status === 404) return null; 
+  if (!res.ok) throw new Error(`Unable to get session (${res.status})`);
+  return res.json();
+}
+
+export type CreateEventInput = Omit<CampusEvent, "id">;
+
+export type CreateEventResult =
+  | { ok: true; event: CampusEvent }
+  | { ok: false; errors: string[] };
+
+export async function createEvent(
+  input: CreateEventInput,
+): Promise<CreateEventResult> {
+  const res = await fetch(`${API_URL}/events`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  // Validation failed: Nest sends { message: ["title should not be empty", ...] }
+  if (res.status === 400) {
+    const body = await res.json();
+    const errors: string[] = Array.isArray(body.message)
+      ? body.message
+      : [body.message ?? "The event data is not valid."];
+    return { ok: false, errors };
+  }
+
+  if (!res.ok) throw new Error(`Failed to create event (${res.status})`);
+
+  return { ok: true, event: await res.json() };
+}
