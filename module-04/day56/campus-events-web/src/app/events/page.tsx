@@ -8,6 +8,7 @@ import EventList from "@/components/EventsList";
 
 export default async function EventsPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
     const params = await searchParams
+    await new Promise((r) => setTimeout(r, 3000));
     const data = await getEvents(params);
   
     return (
