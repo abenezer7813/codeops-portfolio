@@ -167,7 +167,22 @@ Tested manually against the backend:
 
 ## Screenshots
 
-Add screenshots of the main pages here (home, all events, event details, session details, create event).
+## Screenshots
+
+### Home page
+![Home page](screenshots/home.png)
+
+### All events
+![All events](screenshots/eventsPage.png)
+
+### Event details
+![Event details](screenshots/eventDetailPage.png)
+
+### Session details
+![Session details](screenshots/sessionsPage.png)
+
+### Create event
+![Create event](screenshots/create-eventsPage.png).
 
 ## Author
 
