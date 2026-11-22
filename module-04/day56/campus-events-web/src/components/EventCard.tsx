@@ -10,7 +10,7 @@ export default function EventCard({ event }: { event: CampusEvent }) {
                 className="border rounded-lg p-5 shadow-sm space-y-3"
             >
                 <h2 className="text-xl font-semibold">{event.title}</h2>
-                <p className="text-gray-600 line-clamp-2">{event.description}</p>
+                <p className="text-gray-600 line-clamp-1">{event.description}</p>
 
                 <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                     {event.category}

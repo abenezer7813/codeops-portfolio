@@ -2,6 +2,7 @@ import Pagination from "@/components/Pagination";
 import { getEvents } from "../services/eventService";
 import EventCard from "@/components/EventCard";
 import EventFilters from "@/components/EventFilters";
+import EventList from "@/components/EventsList";
 
 
 
@@ -16,12 +17,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                 Events ({data.total} events)
             </h1>
             <EventFilters params={params} />
-            {data.items.length===0?'“No events found. Check back later!':
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {data.items.map((event) => (
-                    <EventCard key={event.id} event={event} />
-                ))}
-            </div>}
+             <EventList events={data.items} />
             {data.totalPages > 1 && <Pagination page={data.page} totalPages={data.totalPages} params={params} />}
         </div>
     );
