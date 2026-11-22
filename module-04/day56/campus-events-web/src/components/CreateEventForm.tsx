@@ -37,16 +37,18 @@ function Field({
   label,
   name,
   error,
+  className = "",
   children,
 }: {
   label: string;
   name: string;
   error?: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <label htmlFor={name} className="mb-1 block font-medium">
+    <div className={className}>
+      <label htmlFor={name} className="mb-1 block text-sm font-medium text-gray-700">
         {label}
       </label>
       {children}
@@ -108,43 +110,43 @@ export default function CreateEventForm() {
       setSubmitting(false);
     }
   }
+return (
+  <form
+    onSubmit={handleSubmit}
+    noValidate
+    className="rounded-xl border bg-white p-6 shadow-sm sm:p-8"
+  >
+    {created && (
+      <div className="mb-6 rounded-lg border border-green-300 bg-green-50 p-4 text-green-800">
+        Event created successfully.{" "}
+        <Link href={`/events/${created.id}`} className="font-medium underline">
+          View &ldquo;{created.title}&rdquo;
+        </Link>
+      </div>
+    )}
 
-  return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-5">
-      {created && (
-        <div className="rounded-lg border border-green-300 bg-green-50 p-4 text-green-800">
-          Event created successfully.{" "}
-          <Link href={`/events/${created.id}`} className="font-medium underline">
-            View &ldquo;{created.title}&rdquo;
-          </Link>
-        </div>
-      )}
+    {serverErrors.length > 0 && (
+      <div className="mb-6 rounded-lg border border-red-300 bg-red-50 p-4 text-red-800">
+        <p className="mb-1 font-medium">Please fix the following:</p>
+        <ul className="list-disc pl-5">
+          {serverErrors.map((message) => (
+            <li key={message}>{message}</li>
+          ))}
+        </ul>
+      </div>
+    )}
 
-      {serverErrors.length > 0 && (
-        <div className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-800">
-          <p className="mb-1 font-medium">Please fix the following:</p>
-          <ul className="list-disc pl-5">
-            {serverErrors.map((message) => (
-              <li key={message}>{message}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <Field label="Title" name="title" error={fieldErrors.title}>
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <Field label="Title" name="title" error={fieldErrors.title} className="sm:col-span-2">
         <input id="title" name="title" value={values.title} onChange={handleChange} className={inputClass} />
       </Field>
 
-      <Field label="Description" name="description" error={fieldErrors.description}>
+      <Field label="Description" name="description" error={fieldErrors.description} className="sm:col-span-2">
         <textarea id="description" name="description" rows={4} value={values.description} onChange={handleChange} className={inputClass} />
       </Field>
 
       <Field label="Location" name="location" error={fieldErrors.location}>
         <input id="location" name="location" value={values.location} onChange={handleChange} className={inputClass} />
-      </Field>
-
-      <Field label="Event date and time" name="eventDate" error={fieldErrors.eventDate}>
-        <input id="eventDate" name="eventDate" type="datetime-local" value={values.eventDate} onChange={handleChange} className={inputClass} />
       </Field>
 
       <Field label="Category" name="category" error={fieldErrors.category}>
@@ -158,18 +160,23 @@ export default function CreateEventForm() {
         </select>
       </Field>
 
-      <label className="flex items-center gap-2">
-        <input type="checkbox" name="isPublished" checked={values.isPublished} onChange={handleChange} />
-        Publish this event now
-      </label>
+      <Field label="Event date and time" name="eventDate" error={fieldErrors.eventDate}>
+        <input id="eventDate" name="eventDate" type="datetime-local" value={values.eventDate} onChange={handleChange} className={inputClass} />
+      </Field>
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {submitting ? "Creating..." : "Create Event"}
-      </button>
-    </form>
-  );
+      <label className="flex items-center gap-2 self-end pb-2">
+        <input type="checkbox" name="isPublished" checked={values.isPublished} onChange={handleChange} className="h-4 w-4" />
+        <span>Publish this event now</span>
+      </label>
+    </div>
+
+    <button
+      type="submit"
+      disabled={submitting}
+      className="mt-8 w-full rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+    >
+      {submitting ? "Creating..." : "Create Event"}
+    </button>
+  </form>
+);
 }

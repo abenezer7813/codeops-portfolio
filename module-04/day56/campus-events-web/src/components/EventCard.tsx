@@ -1,5 +1,7 @@
 import type { CampusEvent } from "@/types/event"
 import Link from "next/link"
+import { Calendar, MapPin } from "lucide-react";
+import { formatDate } from "@/utils/format";
 
 export default function EventCard({ event }: { event: CampusEvent }) {
     return (
@@ -16,12 +18,11 @@ export default function EventCard({ event }: { event: CampusEvent }) {
                     {event.category}
                 </span>
 
-                <p className="text-gray-600">{event.location}</p>
-
-                <p className="text-gray-500">
-                    {new Date(event.eventDate).toLocaleDateString("en-GB", {
-                        dateStyle: "medium",
-                    })}
+                <p className="flex items-center gap-2 text-gray-600">
+                    <MapPin className="h-4 w-4 shrink-0" /> {event.location}
+                </p>
+                <p className="flex items-center gap-2 text-gray-500">
+                    <Calendar className="h-4 w-4 shrink-0" /> {formatDate(event.eventDate)}
                 </p>
 
                 <span
