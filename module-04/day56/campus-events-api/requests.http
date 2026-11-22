@@ -1,0 +1,77 @@
+# Campus Events API: test requests
+# Use with the "REST Client" extension in VS Code: click "Send Request" above each ###.
+# The backend must be running (port 4000). Restart it first for clean seed data.
+
+@baseUrl = http://localhost:4000/api
+
+### 1. Get all events (expect 200, default limit 5)
+GET {{baseUrl}}/events
+
+### 2. Filter by category (expect 200, only technology events)
+GET {{baseUrl}}/events?category=technology
+
+### 3. Filter by publication status (expect 200, only published events)
+GET {{baseUrl}}/events?isPublished=true
+
+### 4. Sort and paginate (expect 200, page 2 of the date-sorted list)
+GET {{baseUrl}}/events?sortBy=eventDate&order=asc&page=2&limit=2
+
+### 5. Get upcoming events (expect 200, an array of events dated today or later)
+GET {{baseUrl}}/events/upcoming
+
+### 6. Get an existing event (expect 200)
+GET {{baseUrl}}/events/evt-101
+
+### 7. Request a missing event (expect 404)
+GET {{baseUrl}}/events/not-real
+
+### 8. Get sessions for an event (expect 200, array of sessions)
+GET {{baseUrl}}/events/evt-101/sessions
+
+### 9. Get a session under its event (expect 200)
+GET {{baseUrl}}/events/evt-101/sessions/ses-201
+
+### 10. Create a valid event (expect 201)
+POST {{baseUrl}}/events
+Content-Type: application/json
+
+{
+  "title": "Intro to Cloud Computing",
+  "description": "A beginner-friendly campus workshop.",
+  "location": "Engineering Block, Room 2",
+  "eventDate": "2026-12-04T09:00:00.000Z",
+  "category": "technology",
+  "isPublished": true
+}
+
+### 11. Create an event with a missing title (expect 400)
+POST {{baseUrl}}/events
+Content-Type: application/json
+
+{
+  "description": "A beginner-friendly campus workshop.",
+  "location": "Engineering Block, Room 2",
+  "eventDate": "2026-12-04T09:00:00.000Z",
+  "category": "technology",
+  "isPublished": true
+}
+
+# --- Extra checks ---
+
+### 12. Session that belongs to a different event (expect 404)
+GET {{baseUrl}}/events/evt-101/sessions/ses-203
+
+### 13. Event with no sessions (expect 200 and an empty array)
+GET {{baseUrl}}/events/evt-102/sessions
+
+### 14. Unsupported sort field (expect 400)
+GET {{baseUrl}}/events?sortBy=price
+
+### 15. Invalid page number (expect 400)
+GET {{baseUrl}}/events?page=0
+
+### 16. Page past the end (expect 200 with empty items)
+GET {{baseUrl}}/events?page=99
+
+### 17. Location filter, partial match (expect 200, locations containing "main")
+GET {{baseUrl}}/events?location=main
