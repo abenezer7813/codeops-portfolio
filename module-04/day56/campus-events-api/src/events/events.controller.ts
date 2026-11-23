@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { EventsService } from './events.service.js';
 import { CreateEventDto } from './dto/create-event.dto.js';
 import { FindEventsQueryDto } from './dto/find-events-query.dto.js';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TimingInterceptor } from '../common/timing/timing.interceptor.js';
+import { ApiKeyGuard } from '../common/api-key/api-key.guard.js';
 @UseInterceptors(TimingInterceptor)
 @ApiTags("events")
 @Controller({ path: 'events', version: '1' })
@@ -21,6 +22,10 @@ export class EventsController {
     findUpcoming() {
         return this.eventService.findUpcoming()
     }
+    @Get('example')
+    findPage(@Query('page', ParseIntPipe) page: number) {
+        return { page, message: 'Page received successfully' };
+    }
     @ApiOperation({ summary: "Single Event " })
     @Get(':id')
     findOne(@Param("id") id: string) {
@@ -37,12 +42,14 @@ export class EventsController {
     findSession(@Param('id') eventId: string, @Param('sessionId') sessionId: string) {
         return this.eventService.findSession(eventId, sessionId)
     }
+    @UseGuards(ApiKeyGuard)
     @ApiOperation({ summary: "Creating new event" })
-
     @ApiOkResponse({ type: CreateEventDto })
     @Post()
     createEvent(@Body() body: CreateEventDto) {
         return this.eventService.create(body)
 
     }
+
+
 }

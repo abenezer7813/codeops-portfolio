@@ -56,6 +56,28 @@ Content-Type: application/json
   "isPublished": true
 }
 
+
+
+
+
+
+### Create without a key (expect 401)
+POST {{baseUrl}}/events
+Content-Type: application/json
+
+{ "title": "Test", "description": "x", "location": "y", "eventDate": "2026-12-04T09:00:00.000Z", "category": "technology" }
+
+### Create with the right key (expect 201)
+POST {{baseUrl}}/events
+Content-Type: application/json
+x-api-key: classroom-demo-key-123
+
+{ "title": "Intro to Cloud Computing",
+  "description": "A beginner-friendly campus workshop.",
+  "location": "Engineering Block, Room 2",
+  "eventDate": "2026-12-04T09:00:00.000Z",
+  "category": "technology",
+  "isPublished": true }
 # --- Extra checks ---
 
 ### 12. Session that belongs to a different event (expect 404)

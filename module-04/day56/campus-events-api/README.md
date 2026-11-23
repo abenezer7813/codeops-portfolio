@@ -1,6 +1,6 @@
 # Campus Events API
 
-A REST API for discovering campus events and browsing the sessions that belong to each event. Built with **NestJS** and **TypeScript** for the CodeOps Module 4, Day 56 practical exercise.
+A REST API for discovering campus events and browsing the sessions that belong to each event. Built with **NestJS** and **TypeScript** for the CodeOps Module 4 practical exercise.
 
 Data is stored **in memory** (plain arrays), so it resets every time the server restarts. No database is needed.
 
@@ -10,28 +10,53 @@ Data is stored **in memory** (plain arrays), so it resets every time the server 
 - Request decorators: `@Param()`, `@Query()`, `@Body()`
 - Filtering, sorting and pagination
 - DTO validation with `class-validator`
-- HTTP status codes (200, 201, 400, 404)
+- HTTP status codes (200, 201, 400, 401, 404)
+- **Middleware** (request logging)
+- **Guards** (API key protection)
+- **Interceptors** (execution timing)
+- **Pipes** (`ParseIntPipe`, `ValidationPipe`)
 
 ## Installation and run
 
-Requirements: Node.js and npm.
+Requirements: Node.js and pnpm.
 
 ```bash
-npm install
-npm run start:dev
+pnpm install
+cp .env.example .env      # on Windows PowerShell: copy .env.example .env
+pnpm start:dev
 ```
 
-The API runs at `http://localhost:3000`. Set the `PORT` environment variable to use another port. Every route starts with the global prefix `/api`.
+Then open `.env` and set a classroom key:
+
+```
+CLASSROOM_API_KEY=classroom-demo-key-123
+```
+
+The API runs at `http://localhost:3001`. Every route starts with the global prefix `/api`.
+
+> Environment variables are read **only at startup**. If you change `.env`, stop and restart the server.
+
+### Environment variables
+
+| Variable | Purpose |
+|---|---|
+| `CLASSROOM_API_KEY` | Shared key the guard expects in the `x-api-key` header for `POST /api/events` |
+
+The `.env` file is listed in `.gitignore` and is never committed. `.env.example` is committed with an empty value so others know which variables are needed. `ConfigModule.forRoot({ isGlobal: true })` in `app.module.ts` loads `.env` into `process.env`. Without it, NestJS does not read `.env` files and the guard would see an empty key.
 
 ## Project structure
 
 ```
 src/
-  main.ts                      # app setup: global prefix /api, ValidationPipe
-  app.module.ts                # root module
+  main.ts                      # app setup: global prefix /api, global ValidationPipe
+  app.module.ts                # root module, ConfigModule, registers the middleware
+  common/
+    logger.middleware.ts       # logs every request
+    api-key.guard.ts           # protects POST /api/events with x-api-key
+    timing.interceptor.ts      # logs how long each request takes
   events/
     events.module.ts           # connects the events feature
-    events.controller.ts       # defines routes, reads request data
+    events.controller.ts       # defines routes, applies guard and interceptor
     events.service.ts          # data, filtering, sorting, pagination
     event.types.ts             # Event, Session, PaginatedEvents
     dto/
@@ -39,7 +64,7 @@ src/
       find-events-query.dto.ts # query validation for GET /api/events
 ```
 
-Responsibilities are kept separate: the **module** connects the feature, the **controller** defines routes and reads request data, the **service** does the finding, filtering, sorting and pagination, and the **types/DTOs** describe and validate data.
+Responsibilities are kept separate: the **module** connects the feature, the **controller** defines routes and reads request data, the **service** does the finding, filtering, sorting and pagination, and the **types/DTOs** describe and validate data. The files in `common/` hold the cross-cutting pieces (middleware, guard, interceptor).
 
 ## Data model
 
@@ -51,14 +76,14 @@ The app starts with sample events and sessions (some events have two or more ses
 
 ## Routes
 
-| Method | Endpoint | Behaviour |
-|---|---|---|
-| GET | `/api/events` | List events (supports query options below) |
-| GET | `/api/events/upcoming` | Events whose date is today or later |
-| GET | `/api/events/:id` | One event by ID |
-| GET | `/api/events/:id/sessions` | Sessions of that event |
-| GET | `/api/events/:id/sessions/:sessionId` | One session, only if it belongs to that event |
-| POST | `/api/events` | Create an event (validated body) |
+| Method | Endpoint | Behaviour | Protected |
+|---|---|---|---|
+| GET | `/api/events` | List events (supports query options below) | No |
+| GET | `/api/events/upcoming` | Events whose date is today or later | No |
+| GET | `/api/events/:id` | One event by ID | No |
+| GET | `/api/events/:id/sessions` | Sessions of that event | No |
+| GET | `/api/events/:id/sessions/:sessionId` | One session, only if it belongs to that event | No |
+| POST | `/api/events` | Create an event (validated body) | **Yes, needs `x-api-key`** |
 
 `/upcoming` is declared **before** `/:id` in the controller. Nest matches routes in declaration order, so otherwise `upcoming` would be treated as an event ID.
 
@@ -97,6 +122,7 @@ All are optional.
 ```http
 POST /api/events
 Content-Type: application/json
+x-api-key: classroom-demo-key-123
 
 {
   "title": "Intro to Cloud Computing",
@@ -117,8 +143,68 @@ Content-Type: application/json
 | Successful GET | 200 OK |
 | Event created | 201 Created |
 | Invalid or missing body fields, invalid query values (for example `page=0`, `sortBy=price`, `isPublished=banana`) | 400 Bad Request |
+| Missing or wrong `x-api-key` on `POST /api/events` | 401 Unauthorized |
 | Event not found | 404 Not Found |
 | Session not found, or it belongs to a different event | 404 Not Found |
+
+## Request lifecycle
+
+Every request passes through these stages in order:
+
+```
+Request
+  -> Middleware      (LoggerMiddleware)     log the request
+  -> Guard           (ApiKeyGuard)          is this request allowed?
+  -> Interceptor     (TimingInterceptor)    start the timer
+  -> Pipe            (ValidationPipe)       validate / transform input
+  -> Controller                             choose the operation
+  -> Service                                run the business logic
+  -> Interceptor                            log the elapsed time
+Response
+```
+
+If a stage rejects the request (guard returns 401, pipe returns 400), the later stages do not run. A request can pass the middleware and still be rejected by the guard.
+
+| Component | Question it answers | In this project |
+|---|---|---|
+| Middleware | What should happen to the request first? | Logs `METHOD URL` |
+| Guard | Is this request allowed? | Checks the `x-api-key` header on `POST /api/events` |
+| Interceptor | What should happen before and after the handler? | Logs how long the request took |
+| Pipe | Is the incoming data valid? | Validates the body and query, converts types |
+| Controller | Which operation should run? | Routes in `events.controller.ts` |
+| Service | How is the operation performed? | Logic in `events.service.ts` |
+
+### Middleware: `LoggerMiddleware`
+
+Runs for every route (`forRoutes('*')` in `AppModule`). It prints `METHOD URL` and calls `next()` so the request continues. Without `next()` the request would hang.
+
+### Guard: `ApiKeyGuard`
+
+Applied with `@UseGuards(ApiKeyGuard)` on the `POST /api/events` handler only. It reads the `x-api-key` header and compares it with `process.env.CLASSROOM_API_KEY`. If the key is missing or does not match, it throws `UnauthorizedException` (401). Reading events stays public.
+
+> **Security note:** this is a learning example with a non-sensitive classroom key. A real secret must never be placed in browser-side code or a `NEXT_PUBLIC_` variable, because anything the browser receives can be inspected. Real applications should use proper server-verified authentication and authorization.
+
+### Interceptor: `TimingInterceptor`
+
+Applied with `@UseInterceptors(TimingInterceptor)` on the events controller. It records `Date.now()` before the handler runs, calls `next.handle()`, and uses `tap()` to log `Request completed in Xms` afterwards. It does not change the response body.
+
+### Pipes and validation
+
+- **`ValidationPipe`** is registered globally in `main.ts` with `whitelist: true` (unknown properties are removed) and `transform: true` (values are converted to the types declared in the DTOs). The DTOs `CreateEventDto` and `FindEventsQueryDto` carry the rules.
+- **`ParseIntPipe`** converts a string query value to an integer and returns 400 if it is not a number.
+
+Validation rules for `POST /api/events`:
+
+| Field | Rule |
+|---|---|
+| `title` | non-empty string |
+| `description` | non-empty string |
+| `location` | non-empty string |
+| `eventDate` | ISO 8601 date string |
+| `category` | non-empty string |
+| `isPublished` | optional boolean (default `false`) |
+
+When validation fails, NestJS returns **400 Bad Request** with a `message` array listing every problem, and the controller and service never run.
 
 ## How filtering, sorting and pagination work
 
@@ -139,22 +225,40 @@ The order matters. Filtering must come first so `total` and the pages describe o
 
 Query values arrive as strings, so the query DTO converts `page` and `limit` to numbers (`@Type(() => Number)`) and `isPublished` to a boolean, then validates them. Only `eventDate` and `title` are accepted for `sortBy`, and only `asc` and `desc` for `order`.
 
+## How to test
+
+Start the server with `pnpm start:dev` and keep its terminal visible, because the middleware and interceptor write to the console. Send requests with the REST Client extension using `requests.http` (click **Send Request** above each request), or with `curl` (use `curl.exe` in PowerShell).
+
+| Component | How to test | What to look for |
+|---|---|---|
+| Middleware | Send any request | Server console prints `METHOD /api/...` |
+| Guard | `POST /api/events` without `x-api-key`, then with the correct key | 401, then 201 |
+| Interceptor | Send any request to an events route | Console prints `Request started` and `Request completed in Xms` |
+| ParseIntPipe | Call the demo route with `?page=hello`, then `?page=2` | 400, then 200 |
+| ValidationPipe | `POST /api/events` with a missing title or a wrong type | 400 with a list of messages |
+
 ## Test results
 
 Fill in the actual status code you got for each request. Expected values are shown.
 
-| No. | Test | Request | Expected |
-|---|---|---|---|
-| 1 | Get all events | `GET /api/events` | 200 |
-| 2 | Filter by category | `GET /api/events?category=technology` | 200 |
-| 3 | Filter by publication status | `GET /api/events?isPublished=true` | 200 |
-| 4 | Sort and paginate | `GET /api/events?sortBy=eventDate&order=asc&page=2&limit=2` | 200 |
-| 5 | Get upcoming events | `GET /api/events/upcoming` | 200 |
-| 6 | Get an existing event | `GET /api/events/evt-101` | 200 |
-| 7 | Request a missing event | `GET /api/events/not-real` | 404 |
-| 8 | Get sessions for an event | `GET /api/events/evt-101/sessions` | 200 |
-| 9 | Get a session under its event | `GET /api/events/evt-101/sessions/ses-201` | 200 |
-| 10 | Create a valid event | `POST /api/events` | 201 |
-| 11 | Create an event with missing title | `POST /api/events` | 400 |
+| No. | Test | Request | Expected | Actual |
+|---|---|---|---|---|
+| 1 | Get all events | `GET /api/events` | 200 | 200|
+| 2 | Filter by category | `GET /api/events?category=technology` | 200 | 200|
+| 3 | Filter by publication status | `GET /api/events?isPublished=true` | 200 | 200|
+| 4 | Sort and paginate | `GET /api/events?sortBy=eventDate&order=asc&page=2&limit=2` | 200 | 200|
+| 5 | Get upcoming events | `GET /api/events/upcoming` | 200 |200 |
+| 6 | Get an existing event | `GET /api/events/evt-101` | 200 | 200|
+| 7 | Request a missing event | `GET /api/events/not-real` | 404 |404 |
+| 8 | Get sessions for an event | `GET /api/events/evt-101/sessions` | 200 | 200|
+| 9 | Get a session under its event | `GET /api/events/evt-101/sessions/ses-201` | 200 |200 |
+| 10 | Create a valid event (with key) | `POST /api/events` + `x-api-key` | 201 | 201|
+| 11 | Create an event with missing title (with key) | `POST /api/events` + `x-api-key` | 400 |400 |
+| 12 | Middleware logs the request | any request | line in console | |
+| 13 | Guard: no key | `POST /api/events` without `x-api-key` | 401 |401 |
+| 14 | Guard: correct key | `POST /api/events` + `x-api-key` | 201 | 201|
+| 15 | Interceptor logs execution time | any events request | `Request completed in Xms` in console | |
+| 16 | ParseIntPipe: invalid number | `GET /api/events/example?page=hello` | 400 |400 |
+| 17 | ValidationPipe: wrong field types | `POST /api/events` + `x-api-key`, `isPublished: "yes"` | 400 | |
 
 A `requests.http` file with these requests can be run with the REST Client extension in VS Code.
