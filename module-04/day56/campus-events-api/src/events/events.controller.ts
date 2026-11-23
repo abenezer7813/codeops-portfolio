@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseInterceptors } from '@nestjs/common';
 import { EventsService } from './events.service.js';
 import { CreateEventDto } from './dto/create-event.dto.js';
 import { FindEventsQueryDto } from './dto/find-events-query.dto.js';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { TimingInterceptor } from '../common/timing/timing.interceptor.js';
+@UseInterceptors(TimingInterceptor)
 @ApiTags("events")
 @Controller({ path: 'events', version: '1' })
 export class EventsController {
