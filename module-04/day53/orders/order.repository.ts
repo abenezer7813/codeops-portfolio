@@ -1,4 +1,4 @@
-import { Order } from "./order.types";
+import { Order } from "../order.types";
 
 export interface OrderRepository {
   byId(id: number): Order | undefined;

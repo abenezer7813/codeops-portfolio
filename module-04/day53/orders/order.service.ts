@@ -1,6 +1,6 @@
-import { Area, Order } from "./order.types";
-import { OrderNotFoundError } from "./order.errors";
-import { OrderRepository } from "./order.repository";
+import { Area, Order } from "../order.types";
+import { OrderNotFoundError } from "../order.errors";
+import { OrderRepository } from "../order.repository";
 
 export class OrderService {
   constructor(private readonly repo: OrderRepository) {}
