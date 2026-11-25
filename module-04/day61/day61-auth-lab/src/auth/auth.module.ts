@@ -6,14 +6,17 @@ import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
-  
+
 @Module({
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({}),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy,JwtAuthGuard],
+  providers: [AuthService, JwtStrategy, JwtAuthGuard],
 })
-export class AuthModule {}
+export class AuthModule { }
