@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const AREAS = ["Bole", "Kazanchis", "Piassa", "Megenagna"];
 function formatEtb(santim) {
     return new Intl.NumberFormat("en-ET", {
@@ -63,4 +62,3 @@ const sample = {
     totalSantim: 50000,
 };
 console.log(receipt(sample));
-//# sourceMappingURL=order.js.map
