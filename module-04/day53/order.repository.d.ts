@@ -1,0 +1,2 @@
+export {};
+//# sourceMappingURL=order.repository.d.ts.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"order.errors.d.ts","sourceRoot":"","sources":["order.errors.ts"],"names":[],"mappings":"AAAA,qBAAa,kBAAmB,SAAQ,KAAK;aACf,OAAO,EAAE,MAAM;IAA3C,YAA4B,OAAO,EAAE,MAAM,EAG1C;CACF;AAED,qBAAa,oBAAqB,SAAQ,KAAK;aAE3B,KAAK,EAAE,MAAM;aACb,MAAM,EAAE,MAAM;IAFhC,YACkB,KAAK,EAAE,MAAM,EACb,MAAM,EAAE,MAAM,EAI/B;CACF"}
