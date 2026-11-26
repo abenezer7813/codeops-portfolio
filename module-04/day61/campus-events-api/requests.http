@@ -1,0 +1,186 @@
+# Campus Events API: test requests
+# Use with the "REST Client" extension in VS Code: click "Send Request" under each ###.
+# The backend must be running on port 4000. Restart it first for clean seed data.
+# Run A2 (register) and A7 (login) before any request that needs a token.
+
+@baseUrl = http://localhost:4000/api
+@email = almaz@example.et
+@password = Password123!
+
+# ===================== AUTH =====================
+
+### A1. Invalid email (expect 400)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{ "email": "not-an-email", "password": "{{password}}" }
+
+### A2. Register a new user (expect 201)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### A3. Same email again (expect 409)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### A4. Short password (expect 400)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{ "email": "new@example.et", "password": "123" }
+
+### A5. Extra role field (expect 400, needs forbidNonWhitelisted: true)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{ "email": "new@example.et", "password": "{{password}}", "roles": ["ADMIN"] }
+
+### A6. Wrong password (expect 401, "Invalid credentials")
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "WrongPassword123!" }
+
+### A6b. Unknown email (expect the same 401)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "nobody@example.et", "password": "{{password}}" }
+
+### A7. Login (expect 201 with accessToken and refreshToken)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### A8. Current user without a token (expect 401)
+GET {{baseUrl}}/auth/me
+
+### A9. Current user with a valid token (expect 200)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{login.response.body.accessToken}}
+
+### A10. Tampered token (expect 401)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{login.response.body.accessToken}}x
+
+# ===================== EVENTS: PUBLIC READS =====================
+
+### 1. Get all events (expect 200, default limit 5)
+GET {{baseUrl}}/events
+
+### 2. Filter by category (expect 200, only technology events)
+GET {{baseUrl}}/events?category=technology
+
+### 3. Filter by publication status (expect 200, only published events)
+GET {{baseUrl}}/events?isPublished=true
+
+### 4. Sort and paginate (expect 200, page 2 of the date-sorted list)
+GET {{baseUrl}}/events?sortBy=eventDate&order=asc&page=2&limit=2
+
+### 5. Get upcoming events (expect 200, events dated today or later)
+GET {{baseUrl}}/events/upcoming
+
+### 6. Get an existing event (expect 200)
+GET {{baseUrl}}/events/evt-101
+
+### 7. Missing event (expect 404)
+GET {{baseUrl}}/events/not-real
+
+### 8. Sessions for an event (expect 200, array)
+GET {{baseUrl}}/events/evt-101/sessions
+
+### 9. Session under its event (expect 200)
+GET {{baseUrl}}/events/evt-101/sessions/ses-201
+
+# ===================== CREATE EVENT =====================
+
+### 10. Create a valid event with a token (expect 201)
+POST {{baseUrl}}/events
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.accessToken}}
+
+{
+  "title": "Intro to Cloud Computing",
+  "description": "A beginner-friendly campus workshop.",
+  "location": "Engineering Block, Room 2",
+  "eventDate": "2026-12-04T09:00:00.000Z",
+  "category": "technology",
+  "isPublished": true
+}
+
+### 11. Missing title, with a token (expect 400)
+POST {{baseUrl}}/events
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.accessToken}}
+
+{
+  "description": "A beginner-friendly campus workshop.",
+  "location": "Engineering Block, Room 2",
+  "eventDate": "2026-12-04T09:00:00.000Z",
+  "category": "technology",
+  "isPublished": true
+}
+
+### 11b. Create without a token (expect 401)
+POST {{baseUrl}}/events
+Content-Type: application/json
+
+{
+  "title": "Test",
+  "description": "x",
+  "location": "y",
+  "eventDate": "2026-12-04T09:00:00.000Z",
+  "category": "technology",
+  "isPublished": true
+}
+
+# ===================== EXTRA CHECKS =====================
+
+### 12. Session that belongs to a different event (expect 404)
+GET {{baseUrl}}/events/evt-101/sessions/ses-203
+
+### 13. Event with no sessions (expect 200, empty array)
+GET {{baseUrl}}/events/evt-102/sessions
+
+### 14. Unsupported sort field (expect 400)
+GET {{baseUrl}}/events?sortBy=price
+
+### 15. Invalid page number (expect 400)
+GET {{baseUrl}}/events?page=0
+
+### 16. Page past the end (expect 200, empty items)
+GET {{baseUrl}}/events?page=99
+
+### 17. Location filter, partial match (expect 200, locations containing "main")
+GET {{baseUrl}}/events?location=main
+
+# ===================== REFRESH AND LOGOUT (run in order) =====================
+
+### R1. Refresh (expect 201, new token pair)
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{login.response.body.refreshToken}}" }
+
+### R2. Reuse the old refresh token (expect 401)
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{login.response.body.refreshToken}}" }
+
+### R3. Logout (expect 201)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{refresh.response.body.accessToken}}
+
+### R4. Refresh after logout (expect 401)
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{refresh.response.body.refreshToken}}" }
